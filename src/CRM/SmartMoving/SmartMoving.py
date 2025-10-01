@@ -1,5 +1,5 @@
 
-from src.CRM.SmartMoving.Pages import Insights
+from src.CRM.SmartMoving.Pages.Sales import Sales
 from src.CRM.CRM import CustomerRelationshipManagementSoftware
 
 from selenium.webdriver.common.by import By
@@ -7,13 +7,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from src.Login.LoginCredentials import LoginCredentials
 from src.CRM.SmartMoving.Pages.Calendars import Calendars
+
 class SmartMoving(CustomerRelationshipManagementSoftware):
     
-    def __init__(self, base_url: str, login_credentials: LoginCredentials, selenium_driver, calendars_page: Calendars):
+    def __init__(self, base_url: str, login_credentials: LoginCredentials, selenium_driver, calendars_page: Calendars, sales_page: Sales):
         super().__init__(base_url, login_credentials, selenium_driver)
         self.calendars = calendars_page
         #self.insights = insights_page
-        #self.sales = sales_page
+        self.sales = sales_page
         #self.settings = settings_page
 
     def _open_url(self, url: str):
@@ -21,7 +22,7 @@ class SmartMoving(CustomerRelationshipManagementSoftware):
         self._wait_for_complete_loading()
 
     def close(self):
-        pass
+        self._driver.quit()
 
     def login(self):
         self._open_url(self.base_url)
