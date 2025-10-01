@@ -17,12 +17,12 @@ class OfficeCalendarEventFilter(DropdownFilter):
 
 
     def select_value(self, target: str):
-        target_xpath = f"//div[@class='label mr-auto' and normalize-space(text())={target}]"
+        target_xpath = f"//div[@class='label mr-auto' and normalize-space(text())='{target}']"
         target_el = WebDriverWait(self._driver, 30).until(
             EC.element_to_be_clickable((By.XPATH, target_xpath))
         )
         target_el.click()
-
+ 
 class OfficeCalendarUserFilter(OfficeCalendarEventFilter):
     def click(self):
         dropdown = WebDriverWait(self._driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='display-value' and normalize-space(text())='Any User']")))

@@ -30,6 +30,8 @@ smartmoving = SmartMoving(base_url="https://app.smartmoving.com/login", login_cr
  selenium_driver=chrome.driver, calendars_page=calendars_page)
 
 smartmoving.login()
+import time
+time.sleep(10)
 calendar_page = smartmoving.calendars
 
 calendar_page.open()
@@ -43,8 +45,4 @@ calendar_page.event_filter.select_value("On-Site Estimate")
 card_today = calendar_page.get_card_today()
 
 print(card_today.get_date().strftime("%b %d, %Y"))
-
-for card in calendar_page.get_all_cards():
-    if len(card.get_events()) > 0:
-        print(card.get_events())
 

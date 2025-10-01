@@ -7,8 +7,7 @@ class CustomerRelationshipManagementSoftware(ABC):
     def __init__(self, base_url: str, login_credentials: LoginCredentials, selenium_driver):
         self.base_url = base_url
         self._login_credentials = login_credentials
-        self._selenium_driver = selenium_driver
-        self._driver = self._selenium_driver.driver
+        self._driver = selenium_driver
 
     def open(self):
         self._driver.get(self.base_url)
