@@ -12,10 +12,10 @@ The following instructions will guide you to set up, configure, and run the syst
    - During installation, check the box “Add Python to PATH”  
    - Verify installation in terminal/command prompt:  
 
-   '''
+   ```
      python --version  
      pip --version
-    '''
+    ```
 
 2. **IDE: VS Code**  
    - Download and install: https://code.visualstudio.com/  
@@ -23,7 +23,12 @@ The following instructions will guide you to set up, configure, and run the syst
 3. **Git (Version Control)**  
    - Download and install Git for Windows: https://git-scm.com/download/win  
    - Verify installation:  
+    ```
+
      git --version
+
+    ```
+    
 
 ---
 
@@ -31,12 +36,15 @@ The following instructions will guide you to set up, configure, and run the syst
 
 ### 1. Open Project in VS Code
 - Launch VS Code and create a new project folder  
-- Open Git Bash in the terminal (`Ctrl+` ` `)  
+- Open Git Bash in the terminal  
 
 ### 2. Clone the Repository
-git clone <repo_url>  
-cd <project_folder>  
-- Replace <repo_url> with your repository link  
+    ```
+
+    git clone https://github.com/jhncdiamante/SmartMovingAutomation.git
+
+    ```
+
 
 ### 3. Initialize Git (if not already)
 git init  
