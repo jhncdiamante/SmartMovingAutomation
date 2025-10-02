@@ -7,6 +7,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from src.Login.LoginCredentials import LoginCredentials
 from src.CRM.SmartMoving.Pages.Calendars import Calendars
+import os
+from datetime import datetime
 
 class SmartMoving(CustomerRelationshipManagementSoftware):
     
@@ -17,6 +19,23 @@ class SmartMoving(CustomerRelationshipManagementSoftware):
         self.sales = sales_page
         #self.settings = settings_page
 
+
+
+    def screenshot(self, page_name: str, folder: str = "screenshots"):
+        """
+        Take a screenshot with filename: YYYY-MM-DD_HH-MM_page_name.png
+        Saves to 'folder' directory in the project root.
+        """
+        os.makedirs(folder, exist_ok=True)
+
+        # Generate filename with timestamp
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
+        filename = os.path.join(folder, f"{timestamp}_{page_name}.png")
+
+        # Take screenshot
+        self._driver.save_screenshot(filename)
+        return filename
+
     def _open_url(self, url: str):
         self._driver.get(url)
         self._wait_for_complete_loading()
@@ -26,6 +45,7 @@ class SmartMoving(CustomerRelationshipManagementSoftware):
 
     def login(self):
         self._open_url(self.base_url)
+        self._driver.maximize_window()
         email_address_form = WebDriverWait(self._driver, 60).until(
             EC.visibility_of_element_located((By.ID, "emailAddress"))
         )

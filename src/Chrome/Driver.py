@@ -24,6 +24,8 @@ class ChromeDriver(IDriver):
             "--disable-blink-features=AutomationControlled",
             "--disable-extensions",
             "--disable-infobars",
+            "--disable-save-password-bubble",
+            "--disable-notifications",
         ]
         for arg in args:
             self.chrome_options.add_argument(arg)

@@ -2,3 +2,5 @@ undetected-chromedriver
 gspread
 setuptools
 oauth2client
+pandas
+

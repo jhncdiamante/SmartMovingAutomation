@@ -23,6 +23,7 @@ pip --version
 
 3. **Git (Version Control)**  
    - Download and install Git for Windows: https://git-scm.com/download/win  
+   - During installation, make sure to agree when asked to put Git to PATH  
    - Verify installation:
 
 ```
@@ -104,7 +105,7 @@ git --version
 2. Add sheets according to storage needs (e.g., Office Calendar, Sales)  
 3. Initialize colum names
 
-- Sales [Date, Calls, Email, Text, Quotes, FU, Msgs, Stale, Inv, Salesperson]
+- Sales [Date,	Calls,	Emails,	Texts,	Quotes Sent,	Follow Ups,	Unread Messages,	Stale Opportunities,	Inventory Submissions,	Salesperson]
 - Office Calendar [Date, # of Apt, Notes]
 
 3. Share the spreadsheet with the bot:  
@@ -114,16 +115,7 @@ git --version
 
 ---
 
-## Running the System
-
-1. Activate the virtual environment:
-
-    source venv/Scripts/activate
-
-2. Run your main script (example):
-
-    python -m src.App
-
+## Running the system via Windows Task Scheduler
 
 
 

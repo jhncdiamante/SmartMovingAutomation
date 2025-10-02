@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from src.CRM.SmartMoving.Pages.Calendars import Calendars
 from src.CRM.SmartMoving.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter
 from src.CRM.SmartMoving.Pages.Sales import Sales
-from datetime import timedelta, date
+from datetime import timedelta
 from src.CRM.SmartMoving.SalesDashboardFilter import SalesDashboardSalesPersonFilter
 import time
 
@@ -61,9 +61,9 @@ scope = ["https://spreadsheets.google.com/feeds",
 creds = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", scope)
 client = gspread.authorize(creds)
 
-sheet = client.open("DAILY KPIS")
+sheet = client.open("DAILY KPIS") # Replace parameter with the actual spreadsheet name
 
-calendar_worksheet = sheet.worksheet("Office Calendar")
+calendar_worksheet = sheet.worksheet("Office Calendar") # Replace parameter with the actual worksheet name
 
 date_tomorrow = (card_today.get_date() + timedelta(days=1)).strftime("%Y-%m-%d")
 

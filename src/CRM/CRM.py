@@ -10,6 +10,7 @@ class CustomerRelationshipManagementSoftware(ABC):
         self._driver = selenium_driver
 
     def open(self):
+        self._driver.maximize_window()
         self._driver.get(self.base_url)
         self._wait_for_complete_loading()
 
@@ -22,6 +23,9 @@ class CustomerRelationshipManagementSoftware(ABC):
 
     def close(self):
         self._driver.quit()
+
+    @abstractmethod
+    def screenshot(self): pass
 
     @abstractmethod
     def login(self): pass
