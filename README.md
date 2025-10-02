@@ -88,12 +88,13 @@ git --version
 
 1. Create a file named `.env` in the root project folder  
 2. Add the following lines (replace with your credentials):
+```
+SMARTMOVING_USERNAME=your_username
+SMARTMOVING_PASSWORD=your_password
 
-    SMARTMOVING_USERNAME=your_username
-    SMARTMOVING_PASSWORD=your_password
-
-    NINETYIO_USERNAME=your_username
-    NINETYIO_PASSWORD=your_password
+NINETYIO_USERNAME=your_username
+NINETYIO_PASSWORD=your_password
+```
     
 - Ensure there are no trailing spaces  
 
