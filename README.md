@@ -23,8 +23,7 @@ The following instructions will guide you to set up, configure, and run the syst
 
 3. **Git (Version Control)**  
    - Download and install Git for Windows: https://git-scm.com/download/win  
-   - Verify installation:  
-
+   - Verify installation:
 
     git --version
 
@@ -75,8 +74,8 @@ The following instructions will guide you to set up, configure, and run the syst
 
 3. **Move JSON to Project Directory**  
    - Place the downloaded JSON file in the root folder of your project  
-   - Rename the file to:  
-    
+   - Rename the file to:
+   
     service_account.json
     
 
@@ -85,14 +84,13 @@ The following instructions will guide you to set up, configure, and run the syst
 ## Environment Variables
 
 1. Create a file named `.env` in the root project folder  
-2. Add the following lines (replace with your credentials):  
-
+2. Add the following lines (replace with your credentials):
 
     SMARTMOVING_USERNAME=your_username  
-    SMARTMOVING_PASSWORD=your_password  
+    SMARTMOVING_PASSWORD=your_password
 
-    NINETYIO_USERNAME=your_username  
-    NINETYIO_PASSWORD=your_password  
+    NINETYIO_USERNAME=your_username
+    NINETYIO_PASSWORD=your_password
 
 - Ensure there are no trailing spaces  
 
@@ -111,12 +109,11 @@ The following instructions will guide you to set up, configure, and run the syst
 
 ## Running the System
 
-1. Activate the virtual environment: 
+1. Activate the virtual environment:
 
+    source venv/Scripts/activate
 
-    source venv/Scripts/activate  
-
-2. Run your main script (example):  
+2. Run your main script (example):
 
     python -m src.App
 
