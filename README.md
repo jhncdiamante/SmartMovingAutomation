@@ -11,8 +11,11 @@ The following instructions will guide you to set up, configure, and run the syst
    - Download the latest Python version: https://www.python.org/downloads/  
    - During installation, check the box “Add Python to PATH”  
    - Verify installation in terminal/command prompt:  
+
+   '''
      python --version  
      pip --version
+    '''
 
 2. **IDE: VS Code**  
    - Download and install: https://code.visualstudio.com/  
