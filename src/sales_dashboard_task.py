@@ -55,8 +55,8 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 creds = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", scope)
 client = gspread.authorize(creds)
 
-sheet = client.open("DAILY KPIS") # Replace param with actual spreadsheet name
-sales_worksheet = sheet.worksheet("Sales") # Replace param with actual worksheet title
+sheet = client.open("DAILY KPIS") 
+sales_worksheet = sheet.worksheet("agent-dashboard") 
 
 date_today = date.today().strftime("%Y-%m-%d")
 salespersons = ["Rebecca Perez", "Erik Cairo", "Laina Torsell"]

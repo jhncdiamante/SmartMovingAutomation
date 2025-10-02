@@ -91,9 +91,6 @@ git --version
 ```
 SMARTMOVING_USERNAME=your_username
 SMARTMOVING_PASSWORD=your_password
-
-NINETYIO_USERNAME=your_username
-NINETYIO_PASSWORD=your_password
 ```
     
 - Ensure there are no trailing spaces  
@@ -102,12 +99,12 @@ NINETYIO_PASSWORD=your_password
 
 ## Google Sheets Setup
 
-1. Create a Google Spreadsheet for bot access  
-2. Add sheets according to storage needs (e.g., Office Calendar, Sales)  
-3. Initialize colum names
+1. Create a Google Spreadsheet for bot access (Name it 'DAILY KPIS')
+2. Add worksheets according to storage needs (Titles: appointments, agent-dashboard)  
+3. Initialize column names
 
-- Sales [Date,	Calls,	Emails,	Texts,	Quotes Sent,	Follow Ups,	Unread Messages,	Stale Opportunities,	Inventory Submissions,	Salesperson]
-- Office Calendar [Date, # of Apt, Notes]
+- agent-dashboard [Date, Calls, Emails, Texts, Quotes Sent, Follow Ups, Unread Messages, Stale Opportunities, Inventory Submissions, Salesperson]
+- appointments [Date, # of Apt, Notes]
 
 3. Share the spreadsheet with the bot:  
    - Open service_account.json  

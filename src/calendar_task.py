@@ -61,9 +61,9 @@ scope = ["https://spreadsheets.google.com/feeds",
 creds = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", scope)
 client = gspread.authorize(creds)
 
-sheet = client.open("DAILY KPIS") # Replace parameter with the actual spreadsheet name
+sheet = client.open("DAILY KPIS") 
 
-calendar_worksheet = sheet.worksheet("Office Calendar") # Replace parameter with the actual worksheet name
+calendar_worksheet = sheet.worksheet("appointments")
 
 date_tomorrow = (card_today.get_date() + timedelta(days=1)).strftime("%Y-%m-%d")
 

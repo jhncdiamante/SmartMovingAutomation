@@ -1,5 +1,5 @@
 @echo off
-cd /d "PATH_TO_YOUR_PROJECT"
+cd /d "D:\Freelancing Documents\SmartMoving\SmartMovingBot"
 call venv\Scripts\activate.bat
 python -m src.sales_dashboard_task
 deactivate
