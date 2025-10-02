@@ -100,6 +100,11 @@ The following instructions will guide you to set up, configure, and run the syst
 
 1. Create a Google Spreadsheet for bot access  
 2. Add sheets according to storage needs (e.g., Office Calendar, Sales)  
+3. Initialize colum names
+
+- Sales [Date, Calls, Email, Text, Quotes, FU, Msgs, Stale, Inv, Salesperson]
+- Office Calendar [Date, # of Apt, Notes]
+
 3. Share the spreadsheet with the bot:  
    - Open service_account.json  
    - Copy the client_email value  

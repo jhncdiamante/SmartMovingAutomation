@@ -73,28 +73,4 @@ calendar_worksheet.append_row([
     ""
 ])         
 
-
-smartmoving.sales.open()
-
-
-salespersons = ["Rebecca Perez", "Erik Cairo", "Laina Torsell"]
-
-for salesperson in salespersons:
-
-    smartmoving.sales.salesperson_filter.click()
-    smartmoving.sales.salesperson_filter.select_value(salesperson)
-
-    sales_worksheet = sheet.worksheet("Sales")
-    date_today = date.today().strftime("%Y-%m-%d") # e.g. 2025-07-23 format
-    sales_worksheet.append_row([
-        date_today,
-        smartmoving.sales.get_calls(),
-        smartmoving.sales.get_emails(),
-        smartmoving.sales.get_texts(),
-        smartmoving.sales.get_quotes_sent(),
-        smartmoving.sales.get_follow_ups(),
-        smartmoving.sales.get_unread_messages(),
-        smartmoving.sales.get_stale_opportunities(),
-        smartmoving.sales.get_inventory_submissions(),
-        salesperson
-    ])
+smartmoving.close()
