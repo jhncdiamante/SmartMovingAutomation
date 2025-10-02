@@ -12,12 +12,10 @@ The following instructions will guide you to set up, configure, and run the syst
    - During installation, check the box “Add Python to PATH”  
    - Verify installation in terminal/command prompt:  
 
-
-    ```
      python --version  
 
      pip --version
-    ```
+
 
 2. **IDE: VS Code**  
    - Download and install: https://code.visualstudio.com/  
@@ -26,9 +24,9 @@ The following instructions will guide you to set up, configure, and run the syst
    - Download and install Git for Windows: https://git-scm.com/download/win  
    - Verify installation:  
 
-    ```
+
      git --version
-    ```
+
     
 
 ---
@@ -40,33 +38,32 @@ The following instructions will guide you to set up, configure, and run the syst
 - Open Git Bash in the terminal  
 
 ### 2. Clone the Repository
-    ```
+    
     git clone https://github.com/jhncdiamante/SmartMovingAutomation.git
-    ```
+    
 
 
 ### 3. Initialize Git
 
-    ```
     git init  
     git remote add origin <repo_url>  
     git branch -M main  
-    ```
+    
 
 ### 4. Create and Activate Virtual Environment
 
-    ```
+    
     python -m venv venv  
 
     source venv/Scripts/activate  
-    ```
+    
 - Verify: (venv) should appear before the terminal prompt  
 
 ### 5. Install Project Dependencies
 
-    ```
+    
     pip install -r requirements.txt
-    ```
+    
 
 ---
 
@@ -82,9 +79,9 @@ The following instructions will guide you to set up, configure, and run the syst
 3. **Move JSON to Project Directory**  
    - Place the downloaded JSON file in the root folder of your project  
    - Rename the file to:  
-    ```
-     service_account.json
-    ```
+    
+    service_account.json
+    
 
 ---
 
@@ -93,13 +90,13 @@ The following instructions will guide you to set up, configure, and run the syst
 1. Create a file named `.env` in the root project folder  
 2. Add the following lines (replace with your credentials):  
 
-    ```
+    
     SMARTMOVING_USERNAME=your_username  
     SMARTMOVING_PASSWORD=your_password  
 
     NINETYIO_USERNAME=your_username  
     NINETYIO_PASSWORD=your_password  
-    ```
+    
 
 - Ensure there are no trailing spaces  
 
