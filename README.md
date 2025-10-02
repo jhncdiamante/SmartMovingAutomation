@@ -12,8 +12,10 @@ The following instructions will guide you to set up, configure, and run the syst
    - During installation, check the box “Add Python to PATH”  
    - Verify installation in terminal/command prompt:
    
-    python --version
-    pip --version
+```
+python --version
+pip --version
+```
 
 
 2. **IDE: VS Code**  
@@ -22,8 +24,10 @@ The following instructions will guide you to set up, configure, and run the syst
 3. **Git (Version Control)**  
    - Download and install Git for Windows: https://git-scm.com/download/win  
    - Verify installation:
-   
-    git --version
+
+```
+git --version
+```
 
     
 
