@@ -13,9 +13,9 @@ The following instructions will guide you to set up, configure, and run the syst
    - Verify installation in terminal/command prompt:  
 
 
-     python --version  
+    python --version  
 
-     pip --version
+    pip --version
 
 
 2. **IDE: VS Code**  
@@ -26,7 +26,7 @@ The following instructions will guide you to set up, configure, and run the syst
    - Verify installation:  
 
 
-     git --version
+    git --version
 
     
 
@@ -45,7 +45,7 @@ The following instructions will guide you to set up, configure, and run the syst
 ### 3. Initialize Git
 
     git init  
-    git remote add origin <repo_url>  
+    git remote add origin https://github.com/jhncdiamante/SmartMovingAutomation.git 
     git branch -M main  
 
 ### 4. Create and Activate Virtual Environment
