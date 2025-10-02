@@ -89,12 +89,12 @@ git --version
 1. Create a file named `.env` in the root project folder  
 2. Add the following lines (replace with your credentials):
 
-    SMARTMOVING_USERNAME=your_username  
+    SMARTMOVING_USERNAME=your_username
     SMARTMOVING_PASSWORD=your_password
 
     NINETYIO_USERNAME=your_username
     NINETYIO_PASSWORD=your_password
-
+    
 - Ensure there are no trailing spaces  
 
 ---
@@ -114,8 +114,27 @@ git --version
    - Share the spreadsheet with this email as an Editor  
 
 ---
+## Running the System via Windows Task Scheduler
 
-## Running the system via Windows Task Scheduler
+1. Navigate to the project directory and locate the following files:  
+   - `run_calendar_task.bat`  
+   - `run_sales_dashboard_task.bat`
 
+2. Open each file in a text editor and update **line 3** with your project path:  
 
+   ```bat
+   cd /d "C:\path\to\your\project"
+   ```
 
+3. Open **Task Scheduler** (search for it in the Windows Start menu).  
+
+4. Create a new task:  
+   - **General** → Click *Create Task*, give it a name, and set *Configure for* to your latest Windows version.  
+   - **Triggers** → Add a schedule
+   - **Actions** → Choose *Start a Program* and browse to/select the corresponding `.bat` file.  
+   - **Conditions** → Adjust any optional requirements  
+   - **Settings** → Configure optional behaviors 
+
+5. Click **OK** to save the task.  
+
+---
