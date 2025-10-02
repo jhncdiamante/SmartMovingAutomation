@@ -22,7 +22,7 @@ class Sales(SmartMovingPage):
         else:
             raise ValueError("Invalid table name: ", table_name)
 
-        count_el = WebDriverWait(self._driver, 30).until(
+        count_el = WebDriverWait(self._driver, 60).until(
             EC.visibility_of_element_located((By.XPATH, xpath))
         )
         text = count_el.text.strip()

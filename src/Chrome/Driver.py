@@ -1,13 +1,13 @@
 from src.Chrome.IDriver import IDriver
 import undetected_chromedriver as uc
 
-class SeleniumDriver(IDriver):
+class ChromeDriver(IDriver):
     def __init__(self):
         self._driver = None
         self.chrome_options = uc.ChromeOptions()
 
 
-    def set_up_options(self):
+    def _set_up_options(self):
         args = [
             "--disable-gpu",
             "--ignore-certificate-errors",
@@ -37,29 +37,5 @@ class SeleniumDriver(IDriver):
         self._driver = driver
 
     def set_up_driver(self):
-        self.set_up_options()
+        self._set_up_options()
         self._driver = uc.Chrome(options=self.chrome_options, use_subprocess=True)
-
-        '''self._driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
-            "source": """
-                // Remove webdriver flag
-                Object.defineProperty(navigator, 'webdriver', {
-                    get: () => undefined
-                });
-
-                // Fake the chrome object
-                window.chrome = {
-                    runtime: {}
-                };
-
-                // Fake languages
-                Object.defineProperty(navigator, 'languages', {
-                    get: () => ['en-US', 'en']
-                });
-
-                // Fake plugins
-                Object.defineProperty(navigator, 'plugins', {
-                    get: () => [1, 2, 3, 4, 5]
-                });
-            """
-        })'''

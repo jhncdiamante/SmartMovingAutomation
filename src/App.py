@@ -1,14 +1,17 @@
 import os
 from src.Login.LoginCredentials import LoginCredentials
-from src.Chrome.Driver import SeleniumDriver
+from src.Chrome.Driver import ChromeDriver
 from src.CRM.SmartMoving.SmartMoving import SmartMoving
 from dotenv import load_dotenv
 from src.CRM.SmartMoving.Pages.Calendars import Calendars
 from src.CRM.SmartMoving.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter
 from src.CRM.SmartMoving.Pages.Sales import Sales
-
+from datetime import timedelta, date
 from src.CRM.SmartMoving.SalesDashboardFilter import SalesDashboardSalesPersonFilter
+import time
 
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 load_dotenv()
 
 SMARTMOVING_USERNAME = os.getenv("SMARTMOVING_USERNAME")
@@ -16,19 +19,19 @@ SMARTMOVING_PASSWORD = os.getenv("SMARTMOVING_PASSWORD")
 
 smartmoving_login_credentials = LoginCredentials(username=SMARTMOVING_USERNAME, password=SMARTMOVING_PASSWORD)
 
-chrome = SeleniumDriver()
+chrome = ChromeDriver()
 chrome.set_up_driver()
 
 
 office_calendar_event_filter = OfficeCalendarEventFilter(driver=chrome.driver)
 office_calendar_user_filter = OfficeCalendarUserFilter(driver=chrome.driver)
-sales_filter = SalesDashboardSalesPersonFilter(driver=chrome.driver)
-
-
 
 calendars_page = Calendars(route="https://app.smartmoving.com/calendars/office", driver=chrome.driver,
                 office_calendar_event_dropdown_filter=office_calendar_event_filter,
                 office_calendar_user_dropdown_filter=office_calendar_user_filter)
+
+sales_filter = SalesDashboardSalesPersonFilter(driver=chrome.driver)
+
 
 sales_page = Sales(route="https://app.smartmoving.com/sales/dashboard", driver=chrome.driver,
                     sales_dropdown_filter=sales_filter)
@@ -37,43 +40,61 @@ smartmoving = SmartMoving(base_url="https://app.smartmoving.com/login", login_cr
  selenium_driver=chrome.driver, calendars_page=calendars_page, sales_page=sales_page)
 
 smartmoving.login()
-import time
-time.sleep(10)
-calendar_page = smartmoving.calendars
 
-calendar_page.open()
-
-calendar_page.name_filter.click()
-calendar_page.name_filter.select_value("Erik Cairo")
-
-calendar_page.event_filter.click()
-calendar_page.event_filter.select_value("On-Site Estimate")
-
-card_today = calendar_page.get_card_today()
-
-print(card_today.get_date().strftime("%b %d, %Y"))
-print(card_today.get_events())
-
-sales_page = smartmoving.sales
-
-sales_page.open()
-
-print(f"Emails: {sales_page.get_emails()}")
-print(f"Calls: {sales_page.get_calls()}")
-
-print(f"Texts: {sales_page.get_texts()}")
-
-print(f"Quotes Sent: {sales_page.get_quotes_sent()}")
-print(f"Follow ups: {sales_page.get_follow_ups()}")
-
-print(f"Inventory Submissions: {sales_page.get_inventory_submissions()}")
-
-print(f"Unread Messages: {sales_page.get_unread_messages()}")
-
-print(f"Stale Opportunites: {sales_page.get_stale_opportunities()}")
+time.sleep(5)
 
 
-smartmoving.close()
+smartmoving.calendars.open()
+
+smartmoving.calendars.name_filter.click()
+smartmoving.calendars.name_filter.select_value("Erik Cairo")
+
+smartmoving.calendars.event_filter.click()
+smartmoving.calendars.event_filter.select_value("On-Site Estimate")
+
+card_today = smartmoving.calendars.get_card_today()
 
 
+scope = ["https://spreadsheets.google.com/feeds",
+         "https://www.googleapis.com/auth/drive"]
 
+creds = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", scope)
+client = gspread.authorize(creds)
+
+sheet = client.open("DAILY KPIS")
+
+calendar_worksheet = sheet.worksheet("Office Calendar")
+
+date_tomorrow = (card_today.get_date() + timedelta(days=1)).strftime("%Y-%m-%d")
+
+calendar_worksheet.append_row([
+    date_tomorrow,
+    len(card_today.get_events()),
+    ""
+])         
+
+
+smartmoving.sales.open()
+
+
+salespersons = ["Rebecca Perez", "Erik Cairo", "Laina Torsell"]
+
+for salesperson in salespersons:
+
+    smartmoving.sales.salesperson_filter.click()
+    smartmoving.sales.salesperson_filter.select_value(salesperson)
+
+    sales_worksheet = sheet.worksheet("Sales")
+    date_today = date.today().strftime("%Y-%m-%d") # e.g. 2025-07-23 format
+    sales_worksheet.append_row([
+        date_today,
+        smartmoving.sales.get_calls(),
+        smartmoving.sales.get_emails(),
+        smartmoving.sales.get_texts(),
+        smartmoving.sales.get_quotes_sent(),
+        smartmoving.sales.get_follow_ups(),
+        smartmoving.sales.get_unread_messages(),
+        smartmoving.sales.get_stale_opportunities(),
+        smartmoving.sales.get_inventory_submissions(),
+        salesperson
+    ])

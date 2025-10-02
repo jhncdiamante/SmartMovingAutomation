@@ -4,7 +4,7 @@ from src.Chrome.IDriver import IDriver
 
 class DropdownFilter(ABC):
     def __init__(self, driver: IDriver):
-        self._driver = driver # selenium driver
+        self._driver = driver
 
     @abstractmethod
     def click(self):

@@ -26,17 +26,20 @@ class SmartMoving(CustomerRelationshipManagementSoftware):
 
     def login(self):
         self._open_url(self.base_url)
-        email_address_form = WebDriverWait(self._driver, 30).until(
+        email_address_form = WebDriverWait(self._driver, 60).until(
             EC.visibility_of_element_located((By.ID, "emailAddress"))
         )
-        password_form = WebDriverWait(self._driver, 30).until(
+        password_form = WebDriverWait(self._driver, 60).until(
             EC.visibility_of_element_located((By.ID, "password"))
         )
 
         email_address_form.send_keys(self._login_credentials.username)
         password_form.send_keys(self._login_credentials.password)
 
-        sign_in_btn = WebDriverWait(self._driver, 30).until(
+        sign_in_btn = WebDriverWait(self._driver, 60).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-test-id='sign-in-btn']"))
         )
         sign_in_btn.click()
+        self._wait_for_complete_loading()
+
+        

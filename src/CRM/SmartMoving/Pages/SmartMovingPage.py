@@ -7,7 +7,7 @@ class SmartMovingPage(IPage):
         self._route = route
         self._driver = driver
 
-    def _wait_for_complete_loading(self, timeout=30):
+    def _wait_for_complete_loading(self, timeout=60):
         WebDriverWait(self._driver, timeout).until(
             lambda _: self._driver.execute_script("return document.readyState")
             == "complete"

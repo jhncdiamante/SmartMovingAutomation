@@ -7,9 +7,10 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class SalesDashboardSalesPersonFilter(OfficeCalendarEventFilter):
-    def click(self):
-        dropdown = WebDriverWait(self._driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='display-value']")))
-        dropdown.click()
-        WebDriverWait(self._driver, 30).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "ngb-popover-window.popover.show")))
+    def _locate_dropdown(self):
+        return WebDriverWait(self._driver, 60).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='display-value']")))
+         
+
+
 
 

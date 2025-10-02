@@ -14,14 +14,14 @@ class CustomerRelationshipManagementSoftware(ABC):
         self._wait_for_complete_loading()
 
 
-    def _wait_for_complete_loading(self, timeout=30):
+    def _wait_for_complete_loading(self, timeout=60):
         WebDriverWait(self._driver, timeout).until(
             lambda _: self._driver.execute_script("return document.readyState")
             == "complete"
         )
 
-    @abstractmethod
-    def close(self): pass
+    def close(self):
+        self._driver.quit()
 
     @abstractmethod
     def login(self): pass
