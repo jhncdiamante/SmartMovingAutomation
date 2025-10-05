@@ -4,8 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from src.Chrome.IDriver import IDriver
-from src.CRM.Features.DropdownFilter import DropdownFilter
-from src.CRM.SmartMoving.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter
+from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter
 
 class Calendars(SmartMovingPage):
     def __init__(self, route: str, driver: IDriver, office_calendar_event_dropdown_filter: OfficeCalendarEventFilter, office_calendar_user_dropdown_filter: OfficeCalendarUserFilter):

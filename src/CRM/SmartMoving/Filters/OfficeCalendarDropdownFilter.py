@@ -1,22 +1,18 @@
-from src.CRM.Features.DropdownFilter import DropdownFilter
+from src.CRM.Features.Filter import Filter
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class OfficeCalendarEventFilter(DropdownFilter):
+class OfficeCalendarEventFilter(Filter):
 
     def click(self):
-        dropdown = self._locate_dropdown()
+        dropdown = self._locate()
         dropdown.click()
         WebDriverWait(self._driver, 60).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "ngb-popover-window.popover.show")))   
 
-    def _locate_dropdown(self):
+    def _locate(self):
         return WebDriverWait(self._driver, 60).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='display-value' and normalize-space(text())='Any Type']")))
-
-    @property
-    def options(self):
-        raise NotImplementedError
 
 
     def select_value(self, target: str):
@@ -27,7 +23,7 @@ class OfficeCalendarEventFilter(DropdownFilter):
         target_el.click()
  
 class OfficeCalendarUserFilter(OfficeCalendarEventFilter):
-    def _locate_dropdown(self):
+    def _locate(self):
         return WebDriverWait(self._driver, 60).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='display-value' and normalize-space(text())='Any User']")))
 
 

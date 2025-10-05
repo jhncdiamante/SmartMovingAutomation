@@ -1,13 +1,13 @@
 import os
-from src.Login.LoginCredentials import LoginCredentials
+from src.Login.LoginCredentials import LoginCredentials                                                           
 from src.Chrome.Driver import ChromeDriver
 from src.CRM.SmartMoving.SmartMoving import SmartMoving
 from dotenv import load_dotenv
 from src.CRM.SmartMoving.Pages.Calendars import Calendars
-from src.CRM.SmartMoving.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter
+from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter
 from src.CRM.SmartMoving.Pages.Sales import Sales
 from datetime import timedelta
-from src.CRM.SmartMoving.SalesDashboardFilter import SalesDashboardSalesPersonFilter
+from src.CRM.SmartMoving.Filters.SalesDashboardFilter import SalesDashboardSalesPersonFilter
 import time
 
 import gspread

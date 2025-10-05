@@ -1,4 +1,5 @@
 
+from src.CRM.SmartMoving.Pages.Settings import Settings
 from src.CRM.SmartMoving.Pages.Sales import Sales
 from src.CRM.CRM import CustomerRelationshipManagementSoftware
 
@@ -9,15 +10,16 @@ from src.Login.LoginCredentials import LoginCredentials
 from src.CRM.SmartMoving.Pages.Calendars import Calendars
 import os
 from datetime import datetime
+from src.CRM.SmartMoving.Pages.Insights import Insights
 
 class SmartMoving(CustomerRelationshipManagementSoftware):
     
-    def __init__(self, base_url: str, login_credentials: LoginCredentials, selenium_driver, calendars_page: Calendars, sales_page: Sales):
+    def __init__(self, base_url: str, login_credentials: LoginCredentials, selenium_driver, calendars_page: Calendars, sales_page: Sales, settings_page: Settings, insights_page: Insights):
         super().__init__(base_url, login_credentials, selenium_driver)
         self.calendars = calendars_page
-        #self.insights = insights_page
+        self.insights = insights_page
         self.sales = sales_page
-        #self.settings = settings_page
+        self.settings = settings_page
 
 
 
@@ -46,6 +48,7 @@ class SmartMoving(CustomerRelationshipManagementSoftware):
     def login(self):
         self._open_url(self.base_url)
         self._driver.maximize_window()
+        self._driver.execute_script("document.body.style.zoom='80%'")
         email_address_form = WebDriverWait(self._driver, 60).until(
             EC.visibility_of_element_located((By.ID, "emailAddress"))
         )

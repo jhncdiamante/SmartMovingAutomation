@@ -2,3 +2,4 @@
 venv/
 *.json
 screenshots/
+app.log

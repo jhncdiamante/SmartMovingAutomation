@@ -10,10 +10,16 @@ from src.Login.LoginCredentials import LoginCredentials
 from src.Chrome.Driver import ChromeDriver
 from src.CRM.SmartMoving.SmartMoving import SmartMoving
 from src.CRM.SmartMoving.Pages.Calendars import Calendars
-from src.CRM.SmartMoving.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter
+from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter
 from src.CRM.SmartMoving.Pages.Sales import Sales
-from src.CRM.SmartMoving.SalesDashboardFilter import SalesDashboardSalesPersonFilter
-
+from src.CRM.SmartMoving.Filters.SalesDashboardFilter import SalesDashboardSalesPersonFilter
+import logging
+# Configure logging
+logging.basicConfig(
+    filename="app.log",      
+    level=logging.ERROR,      
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
 load_dotenv()
 SMARTMOVING_USERNAME = os.getenv("SMARTMOVING_USERNAME")
 SMARTMOVING_PASSWORD = os.getenv("SMARTMOVING_PASSWORD")
@@ -93,11 +99,15 @@ for salesperson in salespersons:
     else:
         df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
-
+df.to_csv("sales_worksheet_backup.csv", index=False)
 sales_worksheet.clear()
 time.sleep(3)
-# Update header
-sales_worksheet.append_row(df.columns.tolist())
-# Update all data in one batch
-sales_worksheet.append_rows(df.astype(str).values.tolist())
+
+try:
+    # Update header
+    sales_worksheet.append_row(df.columns.tolist())
+    # Update all data in one batch
+    sales_worksheet.append_rows(df.astype(str).values.tolist())
+except Exception as e:
+    logging.error(f"An error occured while updating the table: {e}")
 
