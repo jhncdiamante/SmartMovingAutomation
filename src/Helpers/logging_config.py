@@ -8,7 +8,7 @@ def setup_logger(name=None):
     # Prevent adding handlers twice if setup_logger is called multiple times
     if not logger.handlers:
         # File handler
-        file_handler = logging.FileHandler("bot.log", mode="w")
+        file_handler = logging.FileHandler("bot.log", mode="a")
         file_handler.setLevel(logging.INFO)
         file_formatter = logging.Formatter(
             "%(asctime)s - %(levelname)s - %(name)s - %(message)s",

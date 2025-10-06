@@ -1,4 +1,5 @@
 
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from src.CRM.SmartMoving.Pages.InsightsPage.InsightsPage import InsightsPage
 
@@ -11,15 +12,20 @@ class OutstandingBalances(InsightsPage):
         return (By.XPATH,"//a[normalize-space(text())='Outstanding Balances']")
 
     
-    def get_total_balance(self) -> float:
+    def get_total_balance(self) -> float | None:
         xpath = "//table/tbody/tr/td[last()]"
+        self._logger.info("Attempting to get total balance...")
+        try:
+            balances = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
+                EC.visibility_of_all_elements_located((By.XPATH, xpath))
+            )
+        except TimeoutException:
+            self._logger.warning(f"Failed to get total balance under {self.DEFAULT_TIMEOUT} seconds")
+            return 
 
-        balances = WebDriverWait(self._driver, 60).until(
-            EC.visibility_of_all_elements_located((By.XPATH, xpath))
-        )
-
-        total_balance = sum([float(balance.text.replace("$", "").replace(",", "").strip()) for balance in balances if balance.text.strip()])
-
-        return total_balance
-
+        try:    
+            return sum([float(balance.text.replace("$", "").replace(",", "").strip()) for balance in balances if balance.text.strip()])
+        except ValueError:
+            self._logger.warning(f"Unable to sum all balances: {balances.text}.")
+            
     

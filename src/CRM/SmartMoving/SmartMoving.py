@@ -63,6 +63,5 @@ class SmartMoving(CustomerRelationshipManagementSoftware):
             EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-test-id='sign-in-btn']"))
         )
         sign_in_btn.click()
-        self._wait_for_complete_loading()
 
         

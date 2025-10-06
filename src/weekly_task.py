@@ -23,6 +23,8 @@ from src.CRM.SmartMoving.Pages.InsightsPage.AccountingJobRevenue import Accounti
 from src.CRM.SmartMoving.Filters.AccountingJobRevenueDateTypeFilter import AccountingJobRevenueDateFilter
 from src.CRM.SmartMoving.Pages.InsightsPage.InsightsPage import InsightsPage
 from src.CRM.SmartMoving.Filters.SidePanelFilter import SidePanelFilter
+from src.CRM.SmartMoving.Pages.InsightsPage.BookOpportunitiesByServiceDate import BookedOpportunitiesByServiceDate
+
 
 logging.basicConfig(
     filename="app.log",      
@@ -57,13 +59,16 @@ accounting_job_revenue_date_filter = AccountingJobRevenueDateFilter(driver=chrom
 calendar_filter = CalendarFilter(driver=chrome.driver)
 side_panel_filter = SidePanelFilter(driver=chrome.driver)
 
+
+
 insights_page = Insights(route="https://app.smartmoving.com/reports/smart-insights/lists", driver=chrome.driver,
                          accounting_job_revenue=AccountingJobRevenue(driver=chrome.driver, date_filter=accounting_job_revenue_date_filter, calendar_filter=calendar_filter),
                          booked_opportunities_by_date_booked=BookedOpportunitiesByDateBooked(driver=chrome.driver, calendar_filter=calendar_filter, side_panel_filter=side_panel_filter),
                          #booking_percent_by_survey_type=InsightsPage(driver=chrome.driver),
                          #accounting_storage_revenue=InsightsPage(driver=chrome.driver),
                          #completed_moves=InsightsPage(driver=chrome.driver),
-                         #booked_opportunities_by_service_date=InsightsPage(driver=chrome.driver),
+                         booked_opportunities_by_service_date=BookedOpportunitiesByServiceDate(driver=chrome.driver, calendar_filter=calendar_filter, side_panel_filter=side_panel_filter),
+
                          #outstanding_balances=InsightsPage(driver=chrome.driver),
                          #salesperson_performance=InsightsPage(driver=chrome.driver),
                          #lost_leads_and_opportunities_summary=InsightsPage(driver=chrome.driver),
@@ -98,6 +103,7 @@ print(f"Number of Drivers: {number_of_drivers}")
 print(f"Number of Movers: {number_of_movers}")
 
 smartmoving.insights.open()
+'''
 smartmoving.insights.accounting_job_revenue.open()
 smartmoving.insights.accounting_job_revenue.date_filter.click()
 smartmoving.insights.accounting_job_revenue.date_filter.select_value("Closed Date")
@@ -139,6 +145,25 @@ time.sleep(3)
 total_booked_count = smartmoving.insights.booked_opportunities_by_date_booked.get_total_booked_count()
 
 print(f"Total Booked Count: {total_booked_count}")
+smartmoving.insights.booked_opportunities_by_date_booked.close()
+'''
+
+
+smartmoving.insights.booked_opportunities_by_service_date.open()
+
+bo_sd_total_estimated_account = smartmoving.insights.booked_opportunities_by_service_date.get_total_estimated_amount()
+bo_sd_total_booked_count = smartmoving.insights.booked_opportunities_by_service_date.get_total_booked_count()
+
+print(f"Booked Opportunities by Service Date Total Estimated Amout: {bo_sd_total_estimated_account}")
+print(f"Total booked count: {bo_sd_total_booked_count}")
+
+
+
+
+
+
+
+
 time.sleep(3000)
 
 
