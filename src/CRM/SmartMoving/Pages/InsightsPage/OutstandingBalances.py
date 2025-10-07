@@ -6,8 +6,13 @@ from src.CRM.SmartMoving.Pages.InsightsPage.InsightsPage import InsightsPage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from src.Chrome.IDriver import IDriver
+from src.CRM.SmartMoving.Filters.CalendarFilter import CalendarFilter
 class OutstandingBalances(InsightsPage):
+    def __init__(self, driver: IDriver, calendar_filter: CalendarFilter):
+        super().__init__(driver)
+        self.calendar_filter = calendar_filter
+
     def _locator(self) -> tuple[By, str]:
         return (By.XPATH,"//a[normalize-space(text())='Outstanding Balances']")
 

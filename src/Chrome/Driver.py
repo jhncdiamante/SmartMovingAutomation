@@ -26,7 +26,7 @@ class ChromeDriver(IDriver):
             "--disable-infobars",
             "--disable-save-password-bubble",
             "--disable-notifications",
-            "--headless",
+            #"--headless",
         ]
         for arg in args:
             self.chrome_options.add_argument(arg)

@@ -7,8 +7,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class SalesDashboardSalesPersonFilter(OfficeCalendarEventFilter):
+    @property
     def _locate(self):
-        return WebDriverWait(self._driver, 60).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='display-value']")))
+        return (By.XPATH, "//span[@class='display-value']")
          
 
 
