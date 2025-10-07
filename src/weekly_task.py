@@ -206,6 +206,10 @@ new_row["Rebecca Total Booked $"] = booked_opportunities_by_date_booked_page.get
 new_row["Rebecca # of Booked"] = booked_opportunities_by_date_booked_page.get_total_booked_count()
 
 
+
+new_row["Rebecca # of Booked"] = booked_opportunities_by_date_booked_page.get_total_booked_count()
+
+
 booked_opportunities_by_date_booked_page.close()
 
 booking_percent_by_service_date_page = insights_page.booking_percent_by_survey_type
@@ -238,7 +242,11 @@ booked_opportunities_by_service_date_page.calendar_filter.click()
 booked_opportunities_by_service_date_page.calendar_filter.select_value("Next Month")
 new_row["Booked $ Next Month vs Forecast"] = booked_opportunities_by_service_date_page.get_total_estimated_amount()
 
+
+
+
 booked_opportunities_by_service_date_page.close()
+
 
 outstanding_balances_page = insights_page.outstanding_balances
 outstanding_balances_page.open()
@@ -256,18 +264,27 @@ salesperson_performance_page.date_type_filter.select_value("Lead Received Date")
 salesperson_performance_page.calendar_filter.click()
 salesperson_performance_page.calendar_filter.select_value("This Week")
 
-new_row["Bad Leads %"] = salesperson_performance_page.get_bad_leads_percentage()
+total_bad_leads = salesperson_performance_page.get_bad_leads()
+leads_received = salesperson_performance_page.get_leads_received()
+new_row["Bad Leads %"] = (total_bad_leads / leads_received) * 100
 
-new_row["# Leads CY"] = salesperson_performance_page.get_bad_leads()
-new_row["# Leads PY"] = salesperson_performance_page.get_total_bad_leads_prior_year()
+new_row["# Leads CY"] = leads_received - total_bad_leads
+new_row["# Leads PY"] = salesperson_performance_page.get_total_leads_received_prior_year()
 
 new_row["YoY Net Lead Growth %"] = ((new_row["# Leads CY"] - new_row["# Leads PY"]) / new_row["# Leads Py"]) * 100
+
 salesperson_performance_page.side_panel_filter.click()
 salesperson_performance_page.side_panel_filter.select_value("Sales Person", ["Erik Cairo"])
 salesperson_performance_page.side_panel_filter.apply()
 
+
 new_row["Erik - Bad Lead % - by bad lead date received"] = salesperson_performance_page.get_bad_leads_percentage()
 
+
+salesperson_performance_page.side_panel_filter.click()
+salesperson_performance_page.side_panel_filter.select_value("Sales Person", ["Erik Cairo", "Rebecca Perez"])
+salesperson_performance_page.side_panel_filter.apply()
+new_row[""] = salesperson_performance_page.get_bad_leads()
 
 salesperson_performance_page.close()
 
@@ -289,11 +306,22 @@ estimate_accuracy_summary_page.open()
 
 estimate_accuracy_summary_page.calendar_filter.select_value("Last Week")
 
-new_row["Erik - Estimate Accuracy Avg $"] = estimate_accuracy_summary_page.get_average_price()
+new_row["Erik - Estimate Accuracy Avg $"] = estimate_accuracy_summary_page.get_average_price("Erik Cairo")
+new_row["Rebecca - Estimate Accuracy Avg $"] = estimate_accuracy_summary_page.get_average_price("Rebecca Perez")
+
 
 estimate_accuracy_summary_page.close()
 
 new_row["Erik - Average Booked $ Amount"] = new_row["Erik Total Booked $"] / new_row["Erik # of Booked"]
+
+
+settings_page = smartmoving.settings
+
+crew_members = settings_page.get_all_crew_members()
+
+new_row["# of movers"] = [name for name in crew_members if "(D)(CL)" not in name]
+new_row["# of drivers"] = [name for name in crew_members if "(D)" in name]
+
 
 
 

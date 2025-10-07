@@ -22,35 +22,28 @@ class SalespersonPerformance(InsightsPage):
         self.date_type_filter = date_type_filter
         self.side_panel_filter = side_panel_filter
 
+    def _get_lead_info(self, xpath: str) -> int:
+        self._logger.info("Attempting to get leads info...")
+        try:
+            leads_info = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
+                EC.visibility_of_element_located((By.XPATH, xpath))
+            )
+            return int(leads_info.text.strip())
+        except TimeoutException:
+            self._logger.warning("Failed to get leads info under 60 seconds.")
+        except ValueError:
+            self._logger.warning(f"Unable to convert {leads_info.text} to int.")
+
+
     def get_bad_leads(self) -> int | None:
-        xpath = "//span[normalize-space(text())='Bad']/following-sibling::h2/span[1]"
-        self._logger.info("Attempting to get bad leads count...")
-        try:
-            bad_leads_el = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
-                EC.visibility_of_element_located((By.XPATH, xpath))
-            )
-            return int(bad_leads_el.text.strip())
-        except TimeoutException:
-            self._logger.warning("Failed to get bad leads count under 60 seconds.")
-        except ValueError:
-            self._logger.warning(f"Unable to convert {bad_leads_el.text} to int.")
+        return self._get_lead_info("//span[normalize-space(text())='Bad']/following-sibling::h2/span[1]")
 
 
-    def get_bad_leads_percentage(self) -> str | None:
-        xpath = "//span[normalize-space(text())='Bad']/following-sibling::h2/span[2]"
+    def get_leads_received(self) -> int:
+        return self._get_lead_info("//span[normalize-space(text())='Leads Received']/following-sibling::h2")
 
-        self._logger.info("Attempting to get bad leads percentage...")
-        try:
-            bad_leads_percentage_el = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
-                EC.visibility_of_element_located((By.XPATH, xpath))
-            )
-            return bad_leads_percentage_el.text.strip()
-        except TimeoutException:
-            self._logger.warning("Failed to get bad leads percentage under 60 seconds.")
-        except ValueError:
-            self._logger.warning(f"Unable to convert {bad_leads_percentage_el.text} to int.")
 
-    def get_total_bad_leads_prior_year(self) -> int | None:
+    def get_total_leads_received_prior_year(self) -> int | None:
         """Fetch total bad leads count for the same week last year via API."""
         auth_token = extract_auth_token(self._driver)
         try:
@@ -113,8 +106,9 @@ class SalespersonPerformance(InsightsPage):
             data = response.json()
             primary_values = [item["primaryValue"] for item in data if "primaryValue" in item]
             value = primary_values[1]
-            self._logger.info(f"Last year total bad leads count: {value}")
-            return float(value)
+            self._logger.info(f"Last year total leads received: {primary_values[0]}")
+            self._logger.info(f"Last year total bad leads count: {primary_values[1]}")
+            return float(primary_values[0] - primary_values[1])
         except Exception as e:
             self._logger.warning(f"Error fetching last year total bad leads count: {e}")
             return None

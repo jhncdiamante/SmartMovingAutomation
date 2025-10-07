@@ -19,9 +19,9 @@ class EstimateAccuracySummary(InsightsPage):
         return (By.XPATH,"//a[normalize-space(text())='Estimate Accuracy Summary']")
 
 
-    def get_average_price(self) -> float | None:
-        average_price_xpath = "//tbody//tr[.//text()[normalize-space()='Erik Cairo']]/td[3]"
-        self._logger.info("Attempting to get the average price...")
+    def get_average_price(self, salesperson: str) -> float | None:
+        average_price_xpath = f"//tbody//tr[.//text()[normalize-space()='{salesperson}']]/td[3]"
+        self._logger.info(f"Attempting to get the average price for {salesperson}...")
 
         try:
             average_price = WebDriverWait(

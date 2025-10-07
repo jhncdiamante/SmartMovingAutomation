@@ -13,5 +13,5 @@ class Settings(SmartMovingPage):
         crew_member_name_els = table.find_elements(By.CSS_SELECTOR, "td:first-child > a")
 
         # Extract text (names)
-        crew_member_names = [el.text.strip() for el in crew_member_name_els]
+        crew_member_names = [el.text.strip() for el in crew_member_name_els if el.text.strip()]
         return crew_member_names

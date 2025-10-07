@@ -107,7 +107,7 @@ try:
     # Update header
     sales_worksheet.append_row(df.columns.tolist())
     # Update all data in one batch
-    sales_worksheet.append_rows(df.astype(str).values.tolist())
+    sales_worksheet.append_rows(df.values.tolist())
 except Exception as e:
     logging.error(f"An error occured while updating the table: {e}")
 
