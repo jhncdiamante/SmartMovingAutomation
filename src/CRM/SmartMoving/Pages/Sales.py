@@ -65,7 +65,6 @@ class Sales(SmartMovingPage):
         item_el.click()
 
         
-
         count = 0
         date_today = datetime.today().date()
         while True:

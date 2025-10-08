@@ -3,6 +3,7 @@ import time
 from datetime import date
 import pandas as pd
 import gspread
+from datetime import timedelta
 from oauth2client.service_account import ServiceAccountCredentials
 from dotenv import load_dotenv
 
@@ -101,9 +102,13 @@ smartmoving = SmartMoving(
 
 smartmoving.login()
 time.sleep(5)
+today = date.today()
+start_of_week = today - timedelta(days=today.weekday())
+end_of_week = start_of_week + timedelta(days=6)
+date_str = f"{start_of_week} - {end_of_week}"
 
 new_row = {
-    "Date": None,
+    "Date": date_str,
     "Weekly Total Revenue": None,
     "Accounting Job Revenue": None,
     "Accounting Storage Revenue": None,
@@ -146,6 +151,11 @@ insights_page = smartmoving.insights
 
 insights_page.open()
 
+
+# -------------- FOR ACCOUNTING JOB REVENUE
+# -------------- Get total revenue, # Valuation Closed, Total of Valuation Closed
+
+
 accounting_job_revenue_page = insights_page.accounting_job_revenue
 
 accounting_job_revenue_page.open()
@@ -163,10 +173,15 @@ new_row["Valuation as % of Revenue"] = (
     / new_row["Accounting Job Revenue"]
 ) * 100
 
-
 accounting_job_revenue_page.close()
 
+
+
+# -------------- FOR ACCOUNTING STORAGE REVENUE
+# -------------- Get net invoiced, and Weekly total revenue
+
 accounting_storage_revenue_page = insights_page.accounting_storage_revenue
+accounting_storage_revenue_page.open()
 accounting_storage_revenue_page.quick_date_filter.click()
 accounting_storage_revenue_page.quick_date_filter.select_value("Current Week")
 new_row["Accounting Storage Revenue"] = accounting_storage_revenue_page.get_net_invoiced()
@@ -177,6 +192,9 @@ new_row["Weekly Total Revenue"] = new_row["Accounting Job Revenue"] + new_row["A
 accounting_storage_revenue_page.close()
 
 
+
+# -------------- For BOOKED OPPORTUNITIES BY DATE BOOKED
+# -------------- Get $ Booked Sales, $ Booked PY, Erik and Rebecca Total Booked $
 
 
 booked_opportunities_by_date_booked_page = insights_page.booked_opportunities_by_date_booked
@@ -205,22 +223,26 @@ booked_opportunities_by_date_booked_page.side_panel_filter.apply()
 new_row["Rebecca Total Booked $"] = booked_opportunities_by_date_booked_page.get_total_estimated_amount()
 new_row["Rebecca # of Booked"] = booked_opportunities_by_date_booked_page.get_total_booked_count()
 
-
-
 new_row["Rebecca # of Booked"] = booked_opportunities_by_date_booked_page.get_total_booked_count()
 
-
 booked_opportunities_by_date_booked_page.close()
+
+
+# -------------- For BOOKING PERCENT BY SERVICE DATE
+# -------------- Get Erik Booking % On Site and No Survey
 
 booking_percent_by_service_date_page = insights_page.booking_percent_by_survey_type
 booking_percent_by_service_date_page.open()
 booking_percent_by_service_date_page.calendar_filter.click()
 booking_percent_by_service_date_page.calendar_filter.select_value("This Week")
-new_row["Erik Booking % On Site"] = booking_percent_by_service_date_page.get_on_site_survey_total_booked()
+new_row["Erik Booking % On Site"] = booking_percent_by_service_date_page.get_on_site_survey_total_booked_percentage()
 new_row["Erik Booking % No Survey"] = booking_percent_by_service_date_page.get_no_survey_total_booked_percentage()
 
 booking_percent_by_service_date_page.close()
 
+
+# -------------- FOR COMPLETED MOVES
+# -------------- get completed moves, valuation on 30% of jobs, average ticket amount
 
 completed_moves_page = insights_page.completed_moves
 
@@ -229,12 +251,15 @@ completed_moves_page.calendar_filter.click()
 completed_moves_page.calendar_filter.select_value("This Week")
 
 new_row["Completed Moves"] = completed_moves_page.get_total_moves()
-new_row["Valuation on 30% of jobs"] = (new_row["# of Valuation Closed"] / new_row["Completed Moves"]) * 100
+new_row["Valuation on 30% of jobs"] = (new_row["# of Valuation Closed"] / new_row["Completed Moves"])
 
-new_row["Average Ticket Amount"] = (new_row["Accounting Job Revenue"] / new_row["Completed Moves"]) * 100
+new_row["Average Ticket Amount"] = (new_row["Accounting Job Revenue"] / new_row["Completed Moves"])
 
 completed_moves_page.close()
 
+
+# -------------- FOR BOOKED OPP BY SERVICE DATE
+# -------------- get Booked $ Next Month vs Forecast
 
 booked_opportunities_by_service_date_page = insights_page.booked_opportunities_by_service_date
 booked_opportunities_by_service_date_page.open()
@@ -242,11 +267,12 @@ booked_opportunities_by_service_date_page.calendar_filter.click()
 booked_opportunities_by_service_date_page.calendar_filter.select_value("Next Month")
 new_row["Booked $ Next Month vs Forecast"] = booked_opportunities_by_service_date_page.get_total_estimated_amount()
 
-
-
-
 booked_opportunities_by_service_date_page.close()
 
+
+
+# -------------- FOR OUTSTANDING BALANCES
+# -------------- get aging a/r
 
 outstanding_balances_page = insights_page.outstanding_balances
 outstanding_balances_page.open()
@@ -257,8 +283,16 @@ new_row["Aging A/R"] = outstanding_balances_page.get_total_balance()
 
 outstanding_balances_page.close()
 
-salesperson_performance_page = insights_page.salesperson_performance
 
+
+# -------------- FOR SALESPERSON PERFORMANCE
+
+# -------------- get bad leads %, # leads CY/PY, YoY Net Lead Growth %, Erik - Bad Lead % - by bad lead date received, Rebecca - Booking %
+
+
+
+salesperson_performance_page = insights_page.salesperson_performance
+salesperson_performance_page.open()
 salesperson_performance_page.date_type_filter.click()
 salesperson_performance_page.date_type_filter.select_value("Lead Received Date")
 salesperson_performance_page.calendar_filter.click()
@@ -271,22 +305,27 @@ new_row["Bad Leads %"] = (total_bad_leads / leads_received) * 100
 new_row["# Leads CY"] = leads_received - total_bad_leads
 new_row["# Leads PY"] = salesperson_performance_page.get_total_leads_received_prior_year()
 
-new_row["YoY Net Lead Growth %"] = ((new_row["# Leads CY"] - new_row["# Leads PY"]) / new_row["# Leads Py"]) * 100
+new_row["YoY Net Lead Growth %"] = ((new_row["# Leads CY"] - new_row["# Leads PY"]) / new_row["# Leads Py"])
 
 salesperson_performance_page.side_panel_filter.click()
 salesperson_performance_page.side_panel_filter.select_value("Sales Person", ["Erik Cairo"])
 salesperson_performance_page.side_panel_filter.apply()
 
 
-new_row["Erik - Bad Lead % - by bad lead date received"] = salesperson_performance_page.get_bad_leads_percentage()
+new_row["Erik - Bad Lead % - by bad lead date received"] = (salesperson_performance_page.get_bad_leads() /salesperson_performance_page.get_leads_received()) * 100
 
 
 salesperson_performance_page.side_panel_filter.click()
 salesperson_performance_page.side_panel_filter.select_value("Sales Person", ["Erik Cairo", "Rebecca Perez"])
 salesperson_performance_page.side_panel_filter.apply()
-new_row[""] = salesperson_performance_page.get_bad_leads()
+new_row["Rebecca - Booking %"] = salesperson_performance_page.get_leads_received() / salesperson_performance_page.get_bad_leads()
 
 salesperson_performance_page.close()
+
+
+# --------------  FOR LOST LEADS AND OPP SUMMARY
+# --------------  get Lost leads & opportunities from pricing
+
 
 lost_leads_and_opportunities_summary_page = insights_page.lost_leads_and_opportunities_summary
 lost_leads_and_opportunities_summary_page.open()
@@ -300,6 +339,11 @@ lost_leads_and_opportunities_summary_page.calendar_filter.select_value("This Wee
 new_row["Lost leads & opportunities from pricing"] = lost_leads_and_opportunities_summary_page.get_price_too_high()
 
 lost_leads_and_opportunities_summary_page.close()
+
+
+
+# -------------- FOR ESTIMATE ACCURACY SUMMARY
+# -------------- get Erik - Estimate Accuracy Avg $, Rebecca - Estimate Accuracy Avg $
 
 estimate_accuracy_summary_page = insights_page.estimate_accuracy_summary
 estimate_accuracy_summary_page.open()
@@ -316,14 +360,96 @@ new_row["Erik - Average Booked $ Amount"] = new_row["Erik Total Booked $"] / new
 
 
 settings_page = smartmoving.settings
-
+settings_page.open()
 crew_members = settings_page.get_all_crew_members()
 
-new_row["# of movers"] = [name for name in crew_members if "(D)(CL)" not in name]
-new_row["# of drivers"] = [name for name in crew_members if "(D)" in name]
+new_row["# of movers"] = len([name for name in crew_members if "(D)(CL)" not in name])
+new_row["# of drivers"] = len([name for name in crew_members if "(D)" in name])
 
 
 
+
+scope = ["https://spreadsheets.google.com/feeds",
+         "https://www.googleapis.com/auth/drive"]
+
+creds = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", scope)
+client = gspread.authorize(creds)
+
+sheet = client.open("Copy of Daily KPIs - MasterMovers") 
+
+calendar_worksheet = sheet.worksheet("appointments")
+
+existing_data = calendar_worksheet.get_all_values()
+columns = existing_data[0]  # header row
+df = pd.DataFrame(existing_data[1:], columns=columns)
+
+# Convert Date column to datetime
+df["Date"] = pd.to_datetime(df["Date"])
+# Convert # appointments to int
+df["# of Apt"] = pd.to_numeric(df["# of Apt"], errors="coerce").fillna(0).astype(int)
+
+
+start = pd.Timestamp(start_of_week)
+end = pd.Timestamp(end_of_week)
+# Filter by date range
+weekly_df = df[(df["Date"] >= start) & (df["Date"] <= end)]
+
+# Get total count of appointments 
+new_row["Erik # of Estimates"] = weekly_df["# of Apt"].sum(skipna=True)
+
+
+val_sold_worksheet = sheet.worksheet("val-sold")
+
+
+existing_data = val_sold_worksheet.get_all_values()
+columns = existing_data[0]  # header row
+df = pd.DataFrame(existing_data[1:], columns=columns)
+
+df = df[df["SALES REP NAME"] == "Rebecca"]
+
+# Convert Date column to datetime
+df["DATE SOLD (RONEL)"] = pd.to_datetime(df["DATE SOLD (RONEL)"])
+df = df[(df["DATE SOLD (RONEL)"] >= start) & (df["DATE SOLD (RONEL)"] <= end)]
+
+
+df["VALUATION AMOUNT"] = (
+    df["VALUATION AMOUNT"]
+    .astype(str)
+    .str.replace("$", "", regex=False)
+    .str.replace(",", "", regex=False)
+    .str.strip()
+    .astype(float)
+)
+
+new_row["Rebecca - Valuation Sold $"] = df["VALUATION AMOUNT"].sum()
+
+
+
+
+dialpad_worksheet = sheet.worksheet("dialpad")
+
+existing_data = dialpad_worksheet.get_all_values()
+columns = existing_data[0]  # header row
+df = pd.DataFrame(existing_data[1:], columns=columns)
+df["name"] = df["name"].astype(str).str.strip()
+
+df = df[df["name"] == "Rebecca Perez"]
+
+
+df["date"] = pd.to_datetime(df["date"])
+df = df[(df["date"] >= start) & (df["date"] <= end)]
+
+
+new_row["Rebecca - Dials"] = df["outbound_calls"].astype(float).sum()
+new_row["Rebecca - Dials"] = df["talk_duration"].astype(float).sum()
+
+
+weekly_data_df = pd.Dataframe(new_row)
+
+weekly_kpis = sheet.worksheet("Weekly KPI")
+
+
+weekly_kpis.append_row([new_row[key] for key in new_row.keys()])      
 
 
 

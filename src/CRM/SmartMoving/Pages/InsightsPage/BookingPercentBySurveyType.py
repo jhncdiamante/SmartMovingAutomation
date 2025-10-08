@@ -42,7 +42,7 @@ class BookingPercentBySurveyType(InsightsPage):
             self._logger.warning(f"Unable to convert {total_booked_percentage.text} to float.")
 
 
-    def get_on_site_survey_total_booked(self) -> float or None:
+    def get_on_site_survey_total_booked_percentage(self) -> float or None:
         return self._get_total_booked_percentage("On-Site Survey")
         
 
