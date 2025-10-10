@@ -48,6 +48,17 @@ class CalendarFilter(Filter):
 
 
     def _click_navigation_button(self, nav: str) -> bool:
+
+        current_nav = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
+            EC.visibility_of_element_located((By.XPATH, "//div[@class='quick-filter-container']//span[contains(text(), 'Current') or contains(text(), 'Past') or contains(text(), 'Future') ]"))
+        ).text.strip()
+
+        if current_nav == nav:
+            return
+
+        assert current_nav == "Current"
+
+
         try:
             self._logger.info(f"Locating navigation button {nav}...")
             nav_button = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
