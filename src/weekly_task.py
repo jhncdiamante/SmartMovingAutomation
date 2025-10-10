@@ -85,7 +85,7 @@ insights_page = Insights(route="https://app.smartmoving.com/reports/smart-insigh
                          salesperson_performance=SalespersonPerformance(driver=chrome.driver, calendar_filter=calendar_filter, date_type_filter="", side_panel_filter=side_panel_filter),
                          lost_leads_and_opportunities_summary=LostLeadsAndOpportunitiesSummary(driver=chrome.driver, calendar_filter=calendar_filter, date_filter=lost_leads_and_opp_date_type_filter),
                          estimate_accuracy_summary=EstimateAccuracySummary(driver=chrome.driver, calendar_filter=calendar_filter),
-                         completed_moves=CompletedMoves(driver=chrome.driver), calendar_filter=calendar_filter
+                         completed_moves=CompletedMoves(driver=chrome.driver, calendar_filter=calendar_filter)
                          )
 
 

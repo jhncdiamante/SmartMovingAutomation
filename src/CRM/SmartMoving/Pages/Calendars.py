@@ -12,6 +12,7 @@ class Calendars(SmartMovingPage):
         self.event_filter = office_calendar_event_dropdown_filter
         self.name_filter = office_calendar_user_dropdown_filter
 
+
     def get_card_today(self) -> Card:
         card_el = WebDriverWait(self._driver, 60).until(EC.visibility_of_element_located(
             (By.CSS_SELECTOR, "a.card.today")

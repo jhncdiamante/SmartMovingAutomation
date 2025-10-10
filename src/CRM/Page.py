@@ -24,7 +24,6 @@ class Page(ABC):
             == "complete"
         )
     @property
-    @abstractmethod
     def _locator(self) -> tuple[By, str]:
         """Subclasses must provide their menu XPath"""
         pass
