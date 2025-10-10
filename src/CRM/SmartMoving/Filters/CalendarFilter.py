@@ -1,5 +1,5 @@
 from typing_extensions import Tuple
-from selenium.common.exceptions import NoSuchElementException, TimeoutException, WebDriverException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -66,11 +66,9 @@ class CalendarFilter(Filter):
         value_xpath = f"//button[contains(normalize-space(.), '{value}')]"
 
         if value in FILTER_OPTIONS["Past"]:
-            if not self._click_navigation_button("Past"):
-                return False
+            self._click_navigation_button("Past")
         elif value in FILTER_OPTIONS["Future"]:
-            if not self._click_navigation_button("Future"):
-                return False
+            self._click_navigation_button("Future")
         elif value not in FILTER_OPTIONS["Present"]:
             raise ValueError(f"Invalid value for calendar filter: {value}")
 

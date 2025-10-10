@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 class SalespersonPerformanceDateTypeFilter(OfficeCalendarEventFilter):
     @property
     def _locator(self):
-        return (By.XPATH, "//span[@class='display-value' and normalize-space(text())='Move Date']")
+        return By.XPATH, "//span[@class='display-value' and normalize-space(text())='Move Date']"
          
 
 

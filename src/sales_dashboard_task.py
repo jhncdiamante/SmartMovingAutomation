@@ -43,7 +43,6 @@ sales_filter = SalesDashboardSalesPersonFilter(driver=chrome.driver)
 sales_page = Sales(route="https://app.smartmoving.com/sales/dashboard", driver=chrome.driver, sales_dropdown_filter=sales_filter)
 
 smartmoving = SmartMoving(
-    base_url="https://app.smartmoving.com/login",
     login_credentials=smartmoving_login_credentials,
     selenium_driver=chrome.driver,
     calendars_page=calendars_page,

@@ -91,7 +91,6 @@ insights_page = Insights(route="https://app.smartmoving.com/reports/smart-insigh
 
 
 smartmoving = SmartMoving(
-    base_url="https://app.smartmoving.com/login",
     login_credentials=smartmoving_login_credentials,
     selenium_driver=chrome.driver,
     calendars_page=calendars_page,

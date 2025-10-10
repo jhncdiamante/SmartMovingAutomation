@@ -12,24 +12,17 @@ from src.CRM.SmartMoving.Filters.CalendarFilter import CalendarFilter
 
 
 class AccountingJobRevenue(InsightsPage):
-    """Handles Accounting Job Revenue-related insights extraction and modal interactions."""
 
     DEFAULT_TIMEOUT = 60
 
     def __init__(self, driver: IDriver, date_filter: AccountingJobRevenueDateFilter, calendar_filter: CalendarFilter):
-        if not driver:
-            raise ValueError("Driver instance cannot be None.")
-        if not date_filter or not calendar_filter:
-            raise ValueError("Both date_filter and calendar_filter are required.")
-
         super().__init__(driver)
         self.date_filter = date_filter
         self.calendar_filter = calendar_filter
 
     @property
     def _locator(self) -> tuple:
-        """Locator for the 'Accounting Job Revenue' navigation."""
-        return (By.XPATH, "//a[normalize-space(text())='Accounting Job Revenue']")
+        return By.XPATH, "//a[normalize-space(text())='Accounting Job Revenue']"
 
     def _wait_for_element(self, locator: tuple, condition=EC.visibility_of_element_located, timeout=None):
         timeout = timeout or self.DEFAULT_TIMEOUT
@@ -75,7 +68,7 @@ class AccountingJobRevenue(InsightsPage):
         element = self._wait_for_element((By.XPATH, item_el_xpath), condition=EC.element_to_be_clickable)
         if not element:
             self._logger.warning(f"Failed to open modal {item}.")
-            return False
+            raise Exception
 
         try:
             element.click()
@@ -86,7 +79,8 @@ class AccountingJobRevenue(InsightsPage):
         except Exception as e:
             self._logger.warning(f"Failed to open modal due to error: {e}")
         
-        return False
+        raise Exception
+        
 
 
     def close_modal(self) -> bool:
