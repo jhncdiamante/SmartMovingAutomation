@@ -30,6 +30,7 @@ class LostLeadsAndOpportunitiesSummary(InsightsPage):
             price_el = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
                 EC.visibility_of_element_located((By.XPATH, xpath))
             )
+            self._logger.info(f"Extracted value: {price_el.text}")
             return int(price_el.text.strip())
         except TimeoutException:
             self._logger.warning("Failed to get price too high under 60 seconds.")

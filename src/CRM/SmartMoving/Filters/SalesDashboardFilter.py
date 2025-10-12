@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 
 class SalesDashboardSalesPersonFilter(OfficeCalendarEventFilter):
     @property
-    def _locate(self):
+    def _locator(self):
         return By.XPATH, "//span[@class='display-value']"
          
 

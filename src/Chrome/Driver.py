@@ -31,6 +31,10 @@ class ChromeDriver(IDriver):
         for arg in args:
             self.chrome_options.add_argument(arg)
 
+        prefs = {"credentials_enable_service": False,
+            "profile.password_manager_enabled": False}
+        self.chrome_options.add_experimental_option("prefs", prefs)
+
     @property
     def driver(self):
         return self._driver

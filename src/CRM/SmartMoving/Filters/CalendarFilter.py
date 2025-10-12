@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from src.CRM.Features.Filter import Filter
+import time
 
 
 FILTER_OPTIONS = {
@@ -39,11 +40,12 @@ class CalendarFilter(Filter):
 
     @property
     def _locator(self) -> Tuple[By, str]:
-        return (By.XPATH, "//sm-button[@materialicon='calendar_today']")
+        return By.XPATH, "//sm-button[@materialicon='calendar_today']"
 
 
     def click(self):
         filter_icon = self._locate()
+        time.sleep(3)
         filter_icon.click()
 
 
@@ -74,7 +76,7 @@ class CalendarFilter(Filter):
 
 
     def select_value(self, value: str="This Week") -> bool:
-        value_xpath = f"//button[contains(normalize-space(.), '{value}')]"
+        value_xpath = f"//div[@class='quick-filter-container']//button[contains(normalize-space(.), '{value}')]"
 
         if value in FILTER_OPTIONS["Past"]:
             self._click_navigation_button("Past")
@@ -84,23 +86,27 @@ class CalendarFilter(Filter):
             raise ValueError(f"Invalid value for calendar filter: {value}")
 
         try:
-            filter_container = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
-                EC.visibility_of_element_located((By.CSS_SELECTOR, "div.quick-filter-container"))
-            )
-            value_el = WebDriverWait(filter_container, self.DEFAULT_TIMEOUT).until(
+           
+            self._logger.info(f"Clicking {value}...")
+            value_el = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
                 EC.element_to_be_clickable((By.XPATH, value_xpath))
             )
 
             value_el.click()
+            time.sleep(5)
             
             button_xpath = "//button[contains(normalize-space(.), 'Apply')]"
-
+            self._logger.info("Clicking apply button...")
             button_el = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(EC.element_to_be_clickable((By.XPATH, button_xpath)))
             button_el.click()
+            self._logger.info("Apply button clicked...")
+            time.sleep(5)
+
+
             return True
         except TimeoutException:
             self._logger.warning("Failed to locate filter container or value element or apply button.")
-        except WebDriverException:
-            self._logger.warning(f"Failed to select given value due to error: {value}.")
+        except WebDriverException as e:
+            self._logger.warning(f"Failed to select given value due to error: {e}.")
 
         

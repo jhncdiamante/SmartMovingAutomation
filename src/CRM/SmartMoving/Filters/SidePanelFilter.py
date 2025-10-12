@@ -17,7 +17,7 @@ class SidePanelFilter(Filter):
 
     @property
     def _locator(self) -> tuple[By, str]:
-        return By.XPATH, "//button[normalize-space(.)='Filters']"
+        return By.XPATH, "//button[contains(text(), 'Filters')]"
 
     def click(self) -> bool:
         filter_button = self._locate()
@@ -26,6 +26,7 @@ class SidePanelFilter(Filter):
             return False
         try:
             filter_button.click()
+            time.sleep(3)
             return True
         except WebDriverException as e:
             self._logger.error(f"Failed to click side panel filter due to error: {e}")
@@ -55,11 +56,14 @@ class SidePanelFilter(Filter):
                 
             try:
                 option.click()
+                self._logger.info(f"Clicked {val}..")
+                time.sleep(3)
+
             except WebDriverException as e:
                 self._logger.error(f"Failed to click option {val}.")
                 raise Exception
                 
-            time.sleep(1)
+            time.sleep(2)
         return True
 
     def apply(self) -> bool:
@@ -75,7 +79,10 @@ class SidePanelFilter(Filter):
             WebDriverWait(self._driver, 60).until_not(
                 EC.presence_of_element_located((By.XPATH, apply_xpath))
             )
+            time.sleep(3)
+
             return True
+            
         except TimeoutException:
             self._logger.error("Failed to wait for filter panel to be closed.")
         except WebDriverException as e:
@@ -96,6 +103,8 @@ class SidePanelFilter(Filter):
             WebDriverWait(self._driver, 60).until_not(
                 EC.presence_of_element_located((By.XPATH, close_xpath))
             )
+            time.sleep(3)
+
             return True
         except TimeoutException:
             self._logger.error("Failed to wait for panel to close.")

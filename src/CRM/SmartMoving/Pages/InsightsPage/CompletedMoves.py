@@ -36,7 +36,7 @@ class CompletedMoves(InsightsPage):
 
 
     def get_total_moves(self) -> int | None:
-        rows_xpath = "//table/tbody/tr/td[11]"
+        rows_xpath = "//table/tbody/tr[contains(., 'Completed')]/td[11]"
         no_data_xpath = "//td[normalize-space(text())='No data matches your current filters. Please adjust and try again.']"
         count = 0
         try:
@@ -53,7 +53,6 @@ class CompletedMoves(InsightsPage):
                         EC.visibility_of_all_elements_located((By.XPATH, rows_xpath))
                     ) 
                     rows = [row for row in rows if row.text.strip() and float(row.text.replace("$", "").replace(",", "").strip()) > 0]
-                    self._logger.info(f"Extracted rows: {rows}")
                     page_count = len(rows)
                     if page_count > 0:
                         count += page_count

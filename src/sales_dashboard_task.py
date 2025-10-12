@@ -46,7 +46,9 @@ smartmoving = SmartMoving(
     login_credentials=smartmoving_login_credentials,
     selenium_driver=chrome.driver,
     calendars_page=calendars_page,
-    sales_page=sales_page
+    sales_page=sales_page,
+    settings_page="",
+    insights_page=""
 )
 
 smartmoving.login()

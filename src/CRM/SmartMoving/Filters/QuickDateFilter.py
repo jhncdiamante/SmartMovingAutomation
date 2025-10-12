@@ -3,7 +3,6 @@ from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import OfficeCalen
 
 from selenium.webdriver.common.by import By
 
-
 class QuickDateFilter(OfficeCalendarEventFilter):
     @property
     def _locator(self):

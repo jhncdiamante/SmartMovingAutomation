@@ -28,7 +28,7 @@ class EstimateAccuracySummary(InsightsPage):
                 self._driver, self.DEFAULT_TIMEOUT).until(
                 EC.visibility_of_element_located((By.XPATH, average_price_xpath))
             )
-            self._logger.info(f"Extracted average price: {average_price}")
+            self._logger.info(f"Extracted average price: {average_price.text.strip()}")
         except TimeoutException:
             self._logger.warning("Failed to get the average price under 60 seconds.")
             return

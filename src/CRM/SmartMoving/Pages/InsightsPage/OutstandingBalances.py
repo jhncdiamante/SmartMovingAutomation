@@ -13,8 +13,9 @@ class OutstandingBalances(InsightsPage):
         super().__init__(driver)
         self.calendar_filter = calendar_filter
 
+    @property
     def _locator(self) -> tuple[By, str]:
-        return (By.XPATH,"//a[normalize-space(text())='Outstanding Balances']")
+        return By.XPATH,"//a[normalize-space(text())='Outstanding Balances']"
 
     
     def get_total_balance(self) -> float | None:

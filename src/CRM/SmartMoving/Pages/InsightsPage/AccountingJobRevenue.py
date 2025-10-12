@@ -121,7 +121,7 @@ class AccountingJobRevenue(InsightsPage):
 
         total = 0.0
         for el in elements:
-            text = getattr(el, "text", "").strip().replace("$", "").replace(",", "")
+            text = el.text.strip().replace("$", "").replace(",", "")
             if not text:
                 continue
             try:

@@ -3,7 +3,7 @@ from src.CRM.Features.Filter import Filter
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+import time
 
 class OfficeCalendarEventFilter(Filter):
 
@@ -17,6 +17,7 @@ class OfficeCalendarEventFilter(Filter):
             dropdown.click()
             WebDriverWait(self._driver, 60).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "ngb-popover-window.popover.show")))   
             self._logger.info("Successfully clicked filter button.")
+            time.sleep(5)
             return True
         except TimeoutException:
             self._logger.error("Failed to wait for visibility of filter popup panel for options.")

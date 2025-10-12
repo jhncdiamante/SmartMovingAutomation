@@ -22,12 +22,17 @@ class SalespersonPerformance(InsightsPage):
         self.date_type_filter = date_type_filter
         self.side_panel_filter = side_panel_filter
 
+    
+    @property
+    def _locator(self) -> tuple[By, str]:
+        return By.XPATH,"//a[normalize-space(text())='Sales Person Performance']"
+
     def _get_lead_info(self, xpath: str) -> int:
-        self._logger.info("Attempting to get leads info...")
         try:
             leads_info = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
                 EC.visibility_of_element_located((By.XPATH, xpath))
             )
+            self._logger.info(f"Extracted value: {leads_info.text.strip()}")
             return int(leads_info.text.strip())
         except TimeoutException:
             self._logger.warning("Failed to get leads info under 60 seconds.")
@@ -36,10 +41,14 @@ class SalespersonPerformance(InsightsPage):
 
 
     def get_bad_leads(self) -> int | None:
+        self._logger.info("Attempting to get bad leads count...")
+
         return self._get_lead_info("//span[normalize-space(text())='Bad']/following-sibling::h2/span[1]")
 
 
     def get_leads_received(self) -> int:
+        self._logger.info("Attempting to get leads received count...")
+
         return self._get_lead_info("//span[normalize-space(text())='Leads Received']/following-sibling::h2")
 
 
@@ -105,7 +114,6 @@ class SalespersonPerformance(InsightsPage):
 
             data = response.json()
             primary_values = [item["primaryValue"] for item in data if "primaryValue" in item]
-            value = primary_values[1]
             self._logger.info(f"Last year total leads received: {primary_values[0]}")
             self._logger.info(f"Last year total bad leads count: {primary_values[1]}")
             return float(primary_values[0] - primary_values[1])
