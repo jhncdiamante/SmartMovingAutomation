@@ -36,7 +36,7 @@ class CompletedMoves(InsightsPage):
 
 
     def get_total_moves(self) -> int | None:
-        rows_xpath = "//table/tbody/tr[contains(., 'Completed')]/td[11]"
+        rows_xpath = "//table/tbody/tr/td[11]"
         no_data_xpath = "//td[normalize-space(text())='No data matches your current filters. Please adjust and try again.']"
         count = 0
         try:

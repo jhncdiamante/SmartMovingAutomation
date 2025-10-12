@@ -176,7 +176,7 @@ new_row["Accounting Job Revenue"] = accounting_job_revenue_page.get_net_revenue(
 new_row["Valuation as % of Revenue"] = (
     total_valuation_cost
     / new_row["Accounting Job Revenue"]
-) * 100
+) 
 
 
 accounting_job_revenue_page.close()
@@ -245,8 +245,8 @@ booking_percent_by_survey_type_page = insights_page.booking_percent_by_survey_ty
 booking_percent_by_survey_type_page.open()
 booking_percent_by_survey_type_page.calendar_filter.click()
 booking_percent_by_survey_type_page.calendar_filter.select_value("This Week")
-new_row["Erik Booking % On Site"] = booking_percent_by_survey_type_page.get_on_site_survey_total_booked_percentage() * 100
-new_row["No Survey"] = booking_percent_by_survey_type_page.get_no_survey_total_booked_percentage() * 100
+new_row["Erik Booking % On Site"] = booking_percent_by_survey_type_page.get_on_site_survey_total_booked_percentage() 
+new_row["No Survey"] = booking_percent_by_survey_type_page.get_no_survey_total_booked_percentage()
 
 booking_percent_by_survey_type_page.close()
 
@@ -314,25 +314,25 @@ salesperson_performance_page.calendar_filter.select_value("This Week")
 
 total_bad_leads = salesperson_performance_page.get_bad_leads()
 leads_received = salesperson_performance_page.get_leads_received()
-new_row["Bad Leads %"] = (total_bad_leads / leads_received) * 100
+new_row["Bad Leads %"] = (total_bad_leads / leads_received)
 
 new_row["# Leads CY"] = leads_received - total_bad_leads
 
-new_row["YoY Net Lead Growth %"] = ((new_row["# Leads CY"] - new_row["# Leads PY"]) / new_row["# Leads PY"]) * 100
+new_row["YoY Net Lead Growth %"] = ((new_row["# Leads CY"] - new_row["# Leads PY"]) / new_row["# Leads PY"])
 
 salesperson_performance_page.side_panel_filter.click()
 salesperson_performance_page.side_panel_filter.select_value("Sales Person", ["Erik Cairo"])
 salesperson_performance_page.side_panel_filter.apply()
 salesperson_performance_page.side_panel_filter.close()
 
-new_row["Erik - Bad Lead % - by bad lead date received"] = (salesperson_performance_page.get_bad_leads() /salesperson_performance_page.get_leads_received()) * 100
+new_row["Erik - Bad Lead % - by bad lead date received"] = (salesperson_performance_page.get_bad_leads() /salesperson_performance_page.get_leads_received())
 
 
 salesperson_performance_page.side_panel_filter.click()
 salesperson_performance_page.side_panel_filter.select_value("Sales Person", ["Erik Cairo", "Rebecca Perez"])
 salesperson_performance_page.side_panel_filter.apply()
 salesperson_performance_page.side_panel_filter.close()
-new_row["Rebecca - Booking %"] = (salesperson_performance_page.get_leads_received() / salesperson_performance_page.get_bad_leads()) * 100
+new_row["Rebecca - Booking %"] = (salesperson_performance_page.get_leads_received() / salesperson_performance_page.get_bad_leads()) 
 
 salesperson_performance_page.close()
 
