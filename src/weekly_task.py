@@ -402,7 +402,6 @@ scorecard = Scorecard(driver=driver, leadership_team_table=leadership_team_table
 ninety = Ninety(login_credentials=ninety_login_credentials, selenium_driver=driver, scorecard=scorecard)
 ninety.login()
 ninety.scorecard.open()
-WebDriverWait(driver, 10).until(lambda d: d.execute_script("return document.readyState") == "complete")
 
 table_map = {
     "Leadership Team": ninety.scorecard.leadership_team_table,
