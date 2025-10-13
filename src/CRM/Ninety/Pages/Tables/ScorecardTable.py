@@ -35,10 +35,6 @@ class ScorecardTable:
         cell.send_keys(value)
         cell.send_keys(Keys.ENTER) 
 
-        WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
-            EC.text_to_be_present_in_element_value((By.XPATH, xpath), value)
-        )
-
 
     def open(self):
         """

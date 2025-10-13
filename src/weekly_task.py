@@ -57,9 +57,6 @@ def safe_div(a, b, default=0.0):
         return default
 
 
-def normalize_key(k: str) -> str:
-    return k.strip()
-
 
 # ---------- env & login ----------
 load_dotenv()
@@ -352,8 +349,6 @@ weekly_kpis.append_row([new_row[key] for key in new_row.keys()])
 metric_table = {
     "Leadership Team": [
         "Weekly Total Revenue",
-        "Accounting Job Revenue",
-        "Accounting Storage Revenue",
         "$ Booked Sales",
         "YoY Net Lead Growth %",
         "Erik Booking % On Site",
@@ -416,36 +411,20 @@ table_map = {
     "CSR Team": ninety.scorecard.csr_team,
 }
 
-def set_metric_with_retry(table_obj, metric_name, value, week, retries=3):
-    """Set metric value with retries and verify by re-reading if API supports (best-effort)."""
-    metric_name = normalize_key(metric_name)
-    str_value = "" if value is None else str(value)
-    last_exc = None
-    for attempt in range(1, retries + 1):
-        try:
-            table_obj.open()
-            # send value (table.set_value is assumed to handle locating and sending keys)
-            table_obj.set_value(metric_name, value=str_value, week=str(week))
-            # small wait for the value propagation
-            time.sleep(0.5)
-            return True
-        except Exception as e:
-            last_exc = e
-            logging.warning(f"Attempt {attempt} failed setting {metric_name} in {table_obj}: {e}")
-            time.sleep(0.5 * attempt)
-    logging.error(f"Failed to set {metric_name} after {retries} attempts: {last_exc}")
-    return False
 
 for table_name, metrics in metric_table.items():
     table = table_map.get(table_name)
     if table is None:
         logging.error(f"No Ninety table mapped for {table_name}, skipping.")
         continue
+    table.open()
+
     for metric in metrics:
         value = new_row.get(metric)
-        success = set_metric_with_retry(table, metric, value, week=start_of_week, retries=3)
-        if not success:
-            logging.error(f"Failed to push {metric} ({value}) to Ninety table {table_name}")
+        # send value (table.set_value is assumed to handle locating and sending keys)
+        table.set_value(metric, value=value, week=str(start_of_week))
+        # small wait for the value propagation
+        time.sleep(0.5)
 
 # ---------- cleanup ----------
 try:
