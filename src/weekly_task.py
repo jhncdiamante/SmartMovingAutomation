@@ -13,7 +13,7 @@ from src.CRM.SmartMoving.Filters.SalespersonPerformanceDateTypeFilter import Sal
 from src.CRM.SmartMoving.Filters.CalendarFilter import CalendarFilter
 from src.CRM.SmartMoving.Pages.InsightsPage.CompletedMoves import CompletedMoves
 from src.Login.LoginCredentials import LoginCredentials
-from src.Chrome.Driver import ChromeDriver
+from src.SeleniumDriverumDriver.Driver import ChromeDriver
 from src.CRM.SmartMoving.SmartMoving import SmartMoving
 from src.CRM.SmartMoving.Pages.Calendars import Calendars
 from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter

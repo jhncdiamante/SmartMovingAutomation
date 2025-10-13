@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from selenium.webdriver.support.ui import WebDriverWait
 from src.Helpers.logging_config import setup_logger
-from src.Chrome.IDriver import IDriver
+from src.SeleniumDriver.IDriver import IDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC

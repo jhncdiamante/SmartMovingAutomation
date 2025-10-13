@@ -1,5 +1,5 @@
 from src.CRM.Page import Page
-from src.Chrome.IDriver import IDriver
+from src.SeleniumDriverumDriverumDriverumDriver.IDriver import IDriver
 from src.Helpers.logging_config import setup_logger
 
 class SmartMovingPage(Page):

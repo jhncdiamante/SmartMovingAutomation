@@ -3,7 +3,7 @@ from src.CRM.SmartMoving.Pages.SmartMovingPage import SmartMovingPage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from src.Chrome.IDriver import IDriver
+from src.SeleniumDriverumDriverumDriver.IDriver import IDriver
 from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter
 
 class Calendars(SmartMovingPage):

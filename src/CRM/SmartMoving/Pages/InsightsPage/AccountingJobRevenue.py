@@ -6,7 +6,7 @@ from selenium.common.exceptions import (
 )
 
 from src.CRM.SmartMoving.Pages.InsightsPage.InsightsPage import InsightsPage
-from src.Chrome.IDriver import IDriver
+from src.SeleniumDriverumDriverumDriverumDriverumDriver.IDriver import IDriver
 from src.CRM.SmartMoving.Filters.AccountingJobRevenueDateTypeFilter import AccountingJobRevenueDateFilter
 from src.CRM.SmartMoving.Filters.CalendarFilter import CalendarFilter
 

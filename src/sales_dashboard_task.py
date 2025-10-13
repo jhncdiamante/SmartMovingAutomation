@@ -7,7 +7,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from dotenv import load_dotenv
 
 from src.Login.LoginCredentials import LoginCredentials
-from src.Chrome.Driver import ChromeDriver
+from src.SeleniumDriver.Driver import ChromeDriver
 from src.CRM.SmartMoving.SmartMoving import SmartMoving
 from src.CRM.SmartMoving.Pages.Calendars import Calendars
 from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter

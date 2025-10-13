@@ -1,6 +1,6 @@
 from selenium.common.exceptions import TimeoutException
 from src.CRM.SmartMoving.Pages.InsightsPage.InsightsPage import InsightsPage
-from src.Chrome.IDriver import IDriver
+from src.SeleniumDriverumDriverumDriver.IDriver import IDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC

@@ -2,7 +2,7 @@
 from dotenv import load_dotenv
 
 from src.Login.LoginCredentials import LoginCredentials
-from src.Chrome.Driver import ChromeDriver
+from src.SeleniumDriver.Driver import EdgeDriver
 from src.CRM.Ninety.Ninety import Ninety
 
 from src.CRM.Ninety.Pages.Scorecard import Scorecard
@@ -18,19 +18,19 @@ NINETY_PASSWORD = os.getenv("NINETYIO_PASSWORD")
 
 ninety_login_credentials = LoginCredentials(username=NINETY_USERNAME, password=NINETY_PASSWORD)
 
-chrome = ChromeDriver()
-chrome.set_up_driver()
+edge = EdgeDriver()
+edge.set_up_driver()
 
-sales_team = SalesTeam(chrome.driver)
-leadership_team_table = LeaderShipTeam(chrome.driver)
-secondary_leadership = SecondaryLeadership(chrome.driver)
-csr_team = CSRTeam(chrome.driver)
+sales_team = SalesTeam(edge.driver)
+leadership_team_table = LeaderShipTeam(edge.driver)
+secondary_leadership = SecondaryLeadership(edge.driver)
+csr_team = CSRTeam(edge.driver)
 
-scorecard = Scorecard(driver=chrome.driver, leadership_team_table=leadership_team_table,
+scorecard = Scorecard(driver=edge.driver, leadership_team_table=leadership_team_table,
                 sales_team=sales_team, secondary_leadership=secondary_leadership, csr_team=csr_team)
 
 
-ninety = Ninety(login_credentials=ninety_login_credentials, selenium_driver=chrome.driver, scorecard=scorecard)
+ninety = Ninety(login_credentials=ninety_login_credentials, selenium_driver=edge.driver, scorecard=scorecard)
 
 ninety.login()
 ninety.scorecard.open()

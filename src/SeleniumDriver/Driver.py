@@ -1,4 +1,4 @@
-from src.Chrome.IDriver import IDriver
+from src.SeleniumDriver.IDriver import IDriver
 import undetected_chromedriver as uc
 
 class ChromeDriver(IDriver):
@@ -46,3 +46,32 @@ class ChromeDriver(IDriver):
     def set_up_driver(self):
         self._set_up_options()
         self._driver = uc.Chrome(options=self.chrome_options, use_subprocess=True)
+
+from selenium.webdriver import Edge, EdgeOptions
+
+class EdgeDriver(IDriver):
+    def __init__(self):
+        self._driver = None
+        self.edge_options = EdgeOptions()
+
+    def _set_up_options(self):
+        args = [
+            "--disable-gpu",
+            "--ignore-certificate-errors",
+            "--disable-extensions",
+            "--window-size=1920,1080",
+        ]
+        for arg in args:
+            self.edge_options.add_argument(arg)
+
+    def set_up_driver(self):
+        self._set_up_options()
+        self._driver = Edge(options=self.edge_options)
+
+    @property
+    def driver(self):
+        return self._driver
+
+    @driver.setter
+    def driver(self, driver):
+        self._driver = driver
