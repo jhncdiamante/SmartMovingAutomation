@@ -34,9 +34,17 @@ ninety = Ninety(login_credentials=ninety_login_credentials, selenium_driver=chro
 
 ninety.login()
 ninety.scorecard.open()
+import time
 
+time.sleep(5)
 ninety.scorecard.leadership_team_table.open()
+import time
+
+time.sleep(5)
 ninety.scorecard.leadership_team_table.set_value("Weekly Total Revenue", value="82100", week="2025-10-13")
+ninety.scorecard.leadership_team_table.set_value("$ Booked Sales", value="12", week="2025-10-13")
+ninety.scorecard.leadership_team_table.set_value("Erik Booking % On Site", value="34", week="2025-10-13")
+
 import time
 time.sleep(21312)
 

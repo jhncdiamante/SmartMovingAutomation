@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from src.Helpers.logging_config import setup_logger
-
+import time
 class Page(ABC):
     
     DEFAULT_TIMEOUT = 60
@@ -29,15 +29,8 @@ class Page(ABC):
 
     def open(self) -> None:
         self._logger.info("Opening page...")
-        for _ in range(3):
-            try:
-                element = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
-                    EC.element_to_be_clickable(self._locator)
-                )
-                element.click()
-                break
-            except Exception as e:
-                self._logger.warning(f"Failed to open page: {e}.\n Retrying....")
-        else:
-            self._logger.error("Failed to open page after 3 attempts.")
-            raise Exception
+        element = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
+                EC.element_to_be_clickable(self._locator)
+            )
+        element.click()
+        time.sleep(5)

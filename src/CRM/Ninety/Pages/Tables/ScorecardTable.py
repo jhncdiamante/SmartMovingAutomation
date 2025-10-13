@@ -6,6 +6,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from abc import abstractmethod
 from src.Helpers.logging_config import setup_logger
 from selenium.webdriver.common.keys import Keys
+import time
+
 class ScorecardTable:
     DEFAULT_TIMEOUT = 60
     def __init__(self, driver: WebDriver):
@@ -29,6 +31,7 @@ class ScorecardTable:
                 EC.visibility_of_element_located((By.XPATH, xpath))
             )
             cell.click()
+            self._logger.info(f"Value set for {title}: {value}")
         except TimeoutException:
             self._logger.warning(f"Failed to locate cell for {title} and {week}.")
             return
@@ -50,4 +53,5 @@ class ScorecardTable:
             EC.element_to_be_clickable(self._locator)
         )
         table_name_option.click()
+        time.sleep(10)
         
