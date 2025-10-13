@@ -38,6 +38,18 @@ from src.CRM.SmartMoving.Pages.InsightsPage.SalespersonPerformance import Salesp
 from src.CRM.SmartMoving.Filters.QuickDateFilter import QuickDateFilter
 from src.CRM.SmartMoving.Filters.LostLeadsAndOpportunitiesSummaryDateFilter import LostLeadsAndOpportunitiesSummaryDateFilter
 
+
+
+
+from src.CRM.Ninety.Ninety import Ninety
+
+from src.CRM.Ninety.Pages.Scorecard import Scorecard
+from src.CRM.Ninety.Pages.Tables.LeadershipTeam import LeaderShipTeam
+from src.CRM.Ninety.Pages.Tables.SalesTeam import SalesTeam
+from src.CRM.Ninety.Pages.Tables.SecondaryLeadership import SecondaryLeadership
+from src.CRM.Ninety.Pages.Tables.CSRTeam import CSRTeam
+
+
 logging.basicConfig(
     filename="app.log",      
     level=logging.ERROR,      
@@ -47,6 +59,8 @@ load_dotenv()
 SMARTMOVING_USERNAME = os.getenv("SMARTMOVING_USERNAME")
 SMARTMOVING_PASSWORD = os.getenv("SMARTMOVING_PASSWORD")
 
+NINETY_USERNAME = os.getenv("NINETYIO_USERNAME")
+NINETY_PASSWORD = os.getenv("NINETYIO_PASSWORD")
 smartmoving_login_credentials = LoginCredentials(username=SMARTMOVING_USERNAME, password=SMARTMOVING_PASSWORD)
 
 chrome = ChromeDriver()
@@ -231,9 +245,7 @@ booked_opportunities_by_date_booked_page.side_panel_filter.close()
 
 
 new_row["Rebecca Total Booked $"] = booked_opportunities_by_date_booked_page.get_total_estimated_amount()
-new_row["Rebecca # of Booked"] = booked_opportunities_by_date_booked_page.get_total_booked_count()
 
-new_row["Rebecca # of Booked"] = booked_opportunities_by_date_booked_page.get_total_booked_count()
 
 booked_opportunities_by_date_booked_page.close()
 
@@ -464,6 +476,28 @@ weekly_kpis = sheet.worksheet("Weekly KPI")
 weekly_kpis.append_row([new_row[key] for key in new_row.keys()])      
 
 
+
+## TRANSFER ALL TO NINETY.IO
+
+ninety_login_credentials = LoginCredentials(username=NINETY_USERNAME, password=NINETY_PASSWORD)
+
+
+sales_team = SalesTeam(chrome.driver)
+leadership_team_table = LeaderShipTeam(chrome.driver)
+secondary_leadership = SecondaryLeadership(chrome.driver)
+csr_team = CSRTeam(chrome.driver)
+
+scorecard = Scorecard(driver=chrome.driver, leadership_team_table=leadership_team_table,
+                sales_team=sales_team, secondary_leadership=secondary_leadership, csr_team=csr_team)
+
+
+ninety = Ninety(login_credentials=ninety_login_credentials, selenium_driver=chrome.driver, scorecard=scorecard)
+
+ninety.login()
+ninety.scorecard.open()
+
+ninety.scorecard.leadership_team_table.open()
+ninety.scorecard.leadership_team_table.set_value("Weekly Total Revenue", value=new_row["Weekly Total Revenue"], week="2025-09-29")
 
 
 
