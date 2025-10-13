@@ -26,7 +26,7 @@ class ScorecardTable:
         xpath = f"//div[@row-index and .//text()[normalize-space()='{title}']]//div[@col-id='{week}T00:00:00.000Z']"
         try:
             cell = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
-                EC.element_to_be_clickable((By.XPATH, xpath))
+                EC.visibility_of_element_located((By.XPATH, xpath))
             )
             cell.click()
         except TimeoutException:
