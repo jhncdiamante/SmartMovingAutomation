@@ -18,7 +18,6 @@ from src.CRM.SmartMoving.Pages.Calendars import Calendars
 from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter
 from src.CRM.SmartMoving.Pages.Sales import Sales
 from src.CRM.SmartMoving.Filters.SalesDashboardFilter import SalesDashboardSalesPersonFilter
-import logging 
 from src.CRM.SmartMoving.Pages.Settings import Settings
 from src.CRM.SmartMoving.Pages.InsightsPage.BookOpportunitiesByDateBooked import BookedOpportunitiesByDateBooked
 
@@ -38,7 +37,8 @@ from src.CRM.SmartMoving.Pages.InsightsPage.SalespersonPerformance import Salesp
 from src.CRM.SmartMoving.Filters.QuickDateFilter import QuickDateFilter
 from src.CRM.SmartMoving.Filters.LostLeadsAndOpportunitiesSummaryDateFilter import LostLeadsAndOpportunitiesSummaryDateFilter
 
-
+from src.Helpers.logging_config import setup_logger
+logging = setup_logger(__name__)
 
 
 from src.CRM.Ninety.Ninety import Ninety
@@ -50,11 +50,6 @@ from src.CRM.Ninety.Pages.Tables.SecondaryLeadership import SecondaryLeadership
 from src.CRM.Ninety.Pages.Tables.CSRTeam import CSRTeam
 
 
-logging.basicConfig(
-    filename="app.log",      
-    level=logging.ERROR,      
-    format="%(asctime)s [%(levelname)s] %(message)s"
-)
 load_dotenv()
 SMARTMOVING_USERNAME = os.getenv("SMARTMOVING_USERNAME")
 SMARTMOVING_PASSWORD = os.getenv("SMARTMOVING_PASSWORD")
@@ -128,29 +123,29 @@ new_row = {
     "$ Booked Sales": None,
     "YoY Net Lead Growth %": None,
     "Erik Booking % On Site": None,
-    "No Survey": None,
+    "Booking % (No Survey Type)": None,
     "Valuation on 30% of jobs": None,
-    "Average Ticket Amount": None,
-    "Booked $ Next Month vs Forecast": None,
+    "Average Ticket Amount Completed Jobs": None,
+    "Booked $ Next Month vs Forecast  (70% of Next Month Revenue Goal)": None,
     "Aging A/R": None,
     "Completed Moves": None,
-    "Valuation as % of Revenue": None,
+    "Valuation % of Revenue": None,
     "$ Booked PY": None,
     "YoY Booking ($)": None,
-    "# Leads PY": None,
-    "# Leads CY": None,
-    "Bad Leads %": None,
+    "# Net Leads PY": None,
+    "# Net Leads CY": None,
+    "Bad Leads Received %": None,
     "Lost leads & opportunities from pricing": None,
     "# of movers": None,
     "# of drivers": None,
-    "Erik Total Booked $": None,
-    "Erik # of Booked": None,
-    "Erik # of Estimates": None,
+    "Erik - Total Booked $": None,
+    "Erik - # Booked ": None,
+    "Erik - # of Estimates": None,
     "Erik - Estimate Accuracy Avg $": None,
     "Erik - Average Booked $ Amount": None,
     "Erik - Bad Lead % - by bad lead date received": None,
     "Erik - # of bundles of boxes per week": None,
-    "Rebecca Total Booked $": None,
+    "Rebecca - Booked $": None,
     "Rebecca - Valuation Sold $": None,
     "Rebecca - Booking %": None,
     "Rebecca - Estimate Accuracy Avg $": None,
@@ -187,7 +182,7 @@ total_valuation_cost = accounting_job_revenue_page.get_total_valuation_cost()
 
 accounting_job_revenue_page.close_modal()
 new_row["Accounting Job Revenue"] = accounting_job_revenue_page.get_net_revenue()
-new_row["Valuation as % of Revenue"] = (
+new_row["Valuation % of Revenue"] = (
     total_valuation_cost
     / new_row["Accounting Job Revenue"]
 ) 
@@ -235,8 +230,8 @@ booked_opportunities_by_date_booked_page.side_panel_filter.apply()
 booked_opportunities_by_date_booked_page.side_panel_filter.close()
 
 
-new_row["Erik Total Booked $"] = booked_opportunities_by_date_booked_page.get_total_estimated_amount()
-new_row["Erik # of Booked"] = booked_opportunities_by_date_booked_page.get_total_booked_count()
+new_row["Erik - Total Booked $"] = booked_opportunities_by_date_booked_page.get_total_estimated_amount()
+new_row["Erik - # Booked "] = booked_opportunities_by_date_booked_page.get_total_booked_count()
 
 booked_opportunities_by_date_booked_page.side_panel_filter.click()
 booked_opportunities_by_date_booked_page.side_panel_filter.select_value("Sales Person", ["Erik Cairo", "Rebecca Perez"])
@@ -244,7 +239,7 @@ booked_opportunities_by_date_booked_page.side_panel_filter.apply()
 booked_opportunities_by_date_booked_page.side_panel_filter.close()
 
 
-new_row["Rebecca Total Booked $"] = booked_opportunities_by_date_booked_page.get_total_estimated_amount()
+new_row["Rebecca - Booked $"] = booked_opportunities_by_date_booked_page.get_total_estimated_amount()
 
 
 booked_opportunities_by_date_booked_page.close()
@@ -258,7 +253,7 @@ booking_percent_by_survey_type_page.open()
 booking_percent_by_survey_type_page.calendar_filter.click()
 booking_percent_by_survey_type_page.calendar_filter.select_value("This Week")
 new_row["Erik Booking % On Site"] = booking_percent_by_survey_type_page.get_on_site_survey_total_booked_percentage() 
-new_row["No Survey"] = booking_percent_by_survey_type_page.get_no_survey_total_booked_percentage()
+new_row["Booking % (No Survey Type)"] = booking_percent_by_survey_type_page.get_no_survey_total_booked_percentage()
 
 booking_percent_by_survey_type_page.close()
 
@@ -275,7 +270,7 @@ completed_moves_page.calendar_filter.select_value("This Week")
 new_row["Completed Moves"] = completed_moves_page.get_total_moves()
 new_row["Valuation on 30% of jobs"] = (new_row["# of Valuation Closed"] / new_row["Completed Moves"])
 
-new_row["Average Ticket Amount"] = (new_row["Accounting Job Revenue"] / new_row["Completed Moves"])
+new_row["Average Ticket Amount Completed Jobs"] = (new_row["Accounting Job Revenue"] / new_row["Completed Moves"])
 
 completed_moves_page.close()
 
@@ -288,7 +283,7 @@ booked_opportunities_by_service_date_page = insights_page.booked_opportunities_b
 booked_opportunities_by_service_date_page.open()
 booked_opportunities_by_service_date_page.calendar_filter.click()
 booked_opportunities_by_service_date_page.calendar_filter.select_value("Next Month")
-new_row["Booked $ Next Month vs Forecast"] = booked_opportunities_by_service_date_page.get_total_estimated_amount()
+new_row["Booked $ Next Month vs Forecast  (70% of Next Month Revenue Goal)"] = booked_opportunities_by_service_date_page.get_total_estimated_amount()
 
 booked_opportunities_by_service_date_page.close()
 
@@ -317,7 +312,7 @@ outstanding_balances_page.close()
 salesperson_performance_page = insights_page.salesperson_performance
 salesperson_performance_page.open()
 
-new_row["# Leads PY"] = salesperson_performance_page.get_total_leads_received_prior_year()
+new_row["# Net Leads PY"] = salesperson_performance_page.get_total_leads_received_prior_year()
 
 salesperson_performance_page.date_type_filter.click()
 salesperson_performance_page.date_type_filter.select_value("Lead Received Date")
@@ -326,11 +321,11 @@ salesperson_performance_page.calendar_filter.select_value("This Week")
 
 total_bad_leads = salesperson_performance_page.get_bad_leads()
 leads_received = salesperson_performance_page.get_leads_received()
-new_row["Bad Leads %"] = (total_bad_leads / leads_received)
+new_row["Bad Leads Received %"] = (total_bad_leads / leads_received)
 
-new_row["# Leads CY"] = leads_received - total_bad_leads
+new_row["# Net Leads CYs CY"] = leads_received - total_bad_leads
 
-new_row["YoY Net Lead Growth %"] = ((new_row["# Leads CY"] - new_row["# Leads PY"]) / new_row["# Leads PY"])
+new_row["YoY Net Lead Growth %"] = ((new_row["# Net Leads CY"] - new_row["# Net Leads PY"]) / new_row["# Net Leads PY"])
 
 salesperson_performance_page.side_panel_filter.click()
 salesperson_performance_page.side_panel_filter.select_value("Sales Person", ["Erik Cairo"])
@@ -344,7 +339,7 @@ salesperson_performance_page.side_panel_filter.click()
 salesperson_performance_page.side_panel_filter.select_value("Sales Person", ["Erik Cairo", "Rebecca Perez"])
 salesperson_performance_page.side_panel_filter.apply()
 salesperson_performance_page.side_panel_filter.close()
-new_row["Rebecca - Booking %"] = (salesperson_performance_page.get_leads_received() / salesperson_performance_page.get_bad_leads()) 
+new_row["Rebecca - Booking %"] = (salesperson_performance_page.get_bad_leads() / salesperson_performance_page.get_leads_received()) 
 
 salesperson_performance_page.close()
 
@@ -381,7 +376,7 @@ new_row["Rebecca - Estimate Accuracy Avg $"] = estimate_accuracy_summary_page.ge
 
 estimate_accuracy_summary_page.close()
 
-new_row["Erik - Average Booked $ Amount"] = new_row["Erik Total Booked $"] / new_row["Erik # of Booked"]
+new_row["Erik - Average Booked $ Amount"] = new_row["Erik - Total Booked $"] / new_row["Erik - # Booked "]
 
 
 settings_page = smartmoving.settings
@@ -420,7 +415,7 @@ end = pd.Timestamp(end_of_week)
 weekly_df = df[(df["Date"] >= start) & (df["Date"] <= end)]
 
 # Get total count of appointments 
-new_row["Erik # of Estimates"] = int(weekly_df["# of Apt"].sum(skipna=True))
+new_row["Erik - # of Estimates"] = int(weekly_df["# of Apt"].sum(skipna=True))
 
 
 val_sold_worksheet = sheet.worksheet("val-sold")
@@ -471,13 +466,61 @@ new_row["Rebecca - Talk Time"] = float(df["talk_duration"].astype(float).sum())
 
 
 weekly_kpis = sheet.worksheet("Weekly KPI")
-
+logging.info(f"Appending new row: {new_row}")
 
 weekly_kpis.append_row([new_row[key] for key in new_row.keys()])      
 
 
 
+
 ## TRANSFER ALL TO NINETY.IO
+
+metric_table = {
+    "Leadership Team": [
+        "Weekly Total Revenue",
+        "Accounting Job Revenue",
+        "Accounting Storage Revenue",
+        "$ Booked Sales",
+        "YoY Net Lead Growth %",
+        "Erik Booking % On Site",
+        "Booking % (No Survey Type)",
+        "Valuation on 30% of jobs",
+        "Average Ticket Amount Completed Jobs",
+        "Booked $ Next Month vs Forecast  (70% of Next Month Revenue Goal)",
+        "Aging A/R",
+    ],
+    "Secondary Leadership KPIs": [
+        "Completed Moves",
+        "Valuation % of Revenue",
+        "$ Booked PY",
+        "YoY Booking ($)",
+        "# Net Leads PY",
+        "# Leads CY",
+        "Bad Leads Received %",
+        "Lost leads & opportunities from pricing",
+        "# of movers",
+        "# of drivers",
+    ],
+    "Sales Team": [
+        "Erik - Total Booked $",
+        "Erik - # Booked ",
+        "Erik - # of Estimates",
+        "Erik - Estimate Accuracy Avg $",
+        "Erik - Average Booked $ Amount ",
+        "Erik - Bad Lead % - by bad lead date received",
+        "Erik - # of bundles of boxes per week",
+    ],
+    "CSR Team": [
+        "Rebecca - Booked $",
+        "Rebecca - Valuation Sold $",
+        "Rebecca - Booking %",
+        "Rebecca - Estimate Accuracy Avg $",
+        "Rebecca - Dials",
+        "Rebecca - Talk Time",
+        "Rebecca - 30% of Valuation Sales",
+    ],
+}
+
 
 ninety_login_credentials = LoginCredentials(username=NINETY_USERNAME, password=NINETY_PASSWORD)
 
@@ -497,17 +540,26 @@ ninety.login()
 ninety.scorecard.open()
 
 ninety.scorecard.leadership_team_table.open()
-ninety.scorecard.leadership_team_table.set_value("Weekly Total Revenue", value=new_row["Weekly Total Revenue"], week="2025-09-29")
+
+table_map = {
+    "Leadership Team": ninety.scorecard.leadership_team_table,
+    "Secondary Leadership KPIs": ninety.scorecard.secondary_leadership,
+    "Sales Team": ninety.scorecard.sales_team,
+    "CSR Team": ninety.scorecard.csr_team,
+}
+
+for table_name, metrics in metric_table.items():
+    table = table_map.get(table_name)
+    
+    table.open()
+    for metric in metrics:
+        try:
+            value = new_row.get(metric)
+            table.set_value(metric, value=value, week=f"{start_of_week}")
+        except Exception as e:
+            logging.error(f"Failed to set value for {metric} in {table_name}: {e}")
 
 
-
-
-
-
-
-
-
-
-
-
+import time
+time.sleep(21312)
 

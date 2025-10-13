@@ -94,7 +94,6 @@ class CustomerRelationshipManagementSoftware(ABC):
             self._logger.info("Starting login process...")
             self._open_url(self.BASE_URL)
             self._driver.maximize_window()
-            self._driver.execute_script("document.body.style.zoom='80%'")
 
             self._logger.info("Locating email and password form fields...")
             email_field = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(

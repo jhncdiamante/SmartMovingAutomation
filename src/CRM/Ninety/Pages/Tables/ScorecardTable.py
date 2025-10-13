@@ -5,7 +5,7 @@ from undetected_chromedriver import By
 from selenium.webdriver.support import expected_conditions as EC
 from abc import abstractmethod
 from src.Helpers.logging_config import setup_logger
-
+from selenium.webdriver.common.keys import Keys
 class ScorecardTable:
     DEFAULT_TIMEOUT = 60
     def __init__(self, driver: WebDriver):
@@ -28,18 +28,23 @@ class ScorecardTable:
             cell = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
                 EC.element_to_be_clickable((By.XPATH, xpath))
             )
+            cell.click()
         except TimeoutException:
             self._logger.warning(f"Failed to locate cell for {title} and {week}.")
             return
         cell.send_keys(value)
+        cell.send_keys(Keys.ENTER) 
+
         WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
-            EC.text_to_be_present_in_element_value((By.XPATH, xpath))
+            EC.text_to_be_present_in_element_value((By.XPATH, xpath), value)
         )
+
 
     def open(self):
         """
         Locates and clicks the dropdown, and then selects the table type to open it.
         """
+        self._logger.info(f"Opening scorecardtable..")
         nav_dropdown = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
             EC.element_to_be_clickable((By.TAG_NAME, "ninety-scorecard-team-select"))
         )

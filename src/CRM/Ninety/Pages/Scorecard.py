@@ -17,4 +17,4 @@ class Scorecard(Page):
         
     @property
     def _locator(self) -> tuple[By, str]:
-        return By.XPATH, "//button[.//text()[normalize-space()='Scorecard']]"
+        return By.XPATH, "//ninety-navigation-menu-item/button[.//text()[normalize-space()='Scorecard']]"
