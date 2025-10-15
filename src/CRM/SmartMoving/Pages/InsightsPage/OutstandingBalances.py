@@ -6,7 +6,7 @@ from src.CRM.SmartMoving.Pages.InsightsPage.InsightsPage import InsightsPage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from src.SeleniumDriver.IDriver import IDriver
+from src.Drivers.IDriver import IDriver
 from src.CRM.SmartMoving.Filters.CalendarFilter import CalendarFilter
 class OutstandingBalances(InsightsPage):
     def __init__(self, driver: IDriver, calendar_filter: CalendarFilter):

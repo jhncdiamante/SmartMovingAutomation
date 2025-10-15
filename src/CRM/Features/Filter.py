@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABC
 
-from src.SeleniumDriver.IDriver import IDriver
+from src.Drivers.IDriver import IDriver
 from src.Helpers.logging_config import setup_logger
 
 from selenium.webdriver.support.ui import WebDriverWait

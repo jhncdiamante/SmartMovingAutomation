@@ -1,6 +1,6 @@
 from src.CRM.SmartMoving.Pages.InsightsPage.InsightsPage import InsightsPage
 from selenium.webdriver.common.by import By
-from src.SeleniumDriverumDriverumDriverumDriverumDriver.IDriver import IDriver
+from src.Drivers.IDriver import IDriver
 from src.CRM.SmartMoving.Filters.QuickDateFilter import QuickDateFilter
 
 from selenium.common.exceptions import TimeoutException, WebDriverException

@@ -2,11 +2,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import (
-    TimeoutException, NoSuchElementException, WebDriverException, StaleElementReferenceException
+    TimeoutException, WebDriverException, StaleElementReferenceException
 )
 
 from src.CRM.SmartMoving.Pages.InsightsPage.InsightsPage import InsightsPage
-from src.SeleniumDriverumDriverumDriverumDriverumDriver.IDriver import IDriver
+from src.Drivers.IDriver import IDriver
 from src.CRM.SmartMoving.Filters.AccountingJobRevenueDateTypeFilter import AccountingJobRevenueDateFilter
 from src.CRM.SmartMoving.Filters.CalendarFilter import CalendarFilter
 

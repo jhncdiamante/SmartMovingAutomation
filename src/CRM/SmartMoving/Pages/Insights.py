@@ -2,7 +2,7 @@ from src.CRM.SmartMoving.Pages.InsightsPage.BookingPercentBySurveyType import Bo
 from src.CRM.SmartMoving.Pages.InsightsPage.CompletedMoves import CompletedMoves
 from src.CRM.SmartMoving.Pages.SmartMovingPage import SmartMovingPage
 from src.CRM.SmartMoving.Pages.InsightsPage.OutstandingBalances import OutstandingBalances
-from src.SeleniumDriver.IDriver import IDriver
+from src.Drivers.IDriver import IDriver
 from src.CRM.SmartMoving.Pages.InsightsPage.SalespersonPerformance import SalespersonPerformance
 
 from src.CRM.SmartMoving.Pages.InsightsPage.AccountingJobRevenue import AccountingJobRevenue

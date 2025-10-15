@@ -13,7 +13,7 @@ from selenium.common.exceptions import (
 from undetected_chromedriver import WebElement
 
 from src.CRM.SmartMoving.Pages.InsightsPage.InsightsPage import InsightsPage
-from src.SeleniumDriverumDriverumDriverumDriverumDriver.IDriver import IDriver
+from src.Drivers.IDriver import IDriver
 from src.CRM.SmartMoving.Filters.CalendarFilter import CalendarFilter
 from src.CRM.SmartMoving.Filters.SidePanelFilter import SidePanelFilter
 

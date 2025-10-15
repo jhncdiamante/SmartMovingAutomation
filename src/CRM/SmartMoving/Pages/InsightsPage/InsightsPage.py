@@ -1,7 +1,7 @@
 
-from src.CRM.Page import Page
+from src.CRM.SeleniumPage import SeleniumPage
 
-class InsightsPage(Page):
+class InsightsPage(SeleniumPage):
 
     def close(self):
         self._logger.info("Closing Page...")

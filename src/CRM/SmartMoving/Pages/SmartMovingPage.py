@@ -1,17 +1,14 @@
-from src.CRM.Page import Page
-from src.SeleniumDriverumDriverumDriverumDriver.IDriver import IDriver
 from src.Helpers.logging_config import setup_logger
+from src.CRM.SeleniumPage import SeleniumPage
 
-class SmartMovingPage(Page):
+class SmartMovingPage(SeleniumPage):
     DEFAULT_TIMEOUT = 60
-    def __init__(self, route: str, driver: IDriver):
+    def __init__(self, route: str, driver):
         self._route = route
         self._driver = driver
         cls = self.__class__
         self._logger = setup_logger(f"{cls.__module__}.{cls.__name__}")
         self._logger.info(f"Initialized {cls.__name__}")
-
-
     
         
     def open(self):

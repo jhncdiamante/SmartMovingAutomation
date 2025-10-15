@@ -404,7 +404,7 @@ ninety.login()
 ninety.scorecard.open()
 
 table_map = {
-    "Leadership Team": ninety.scorecard.leadership_team_table,
+    "Leadership Team": ninety.scorecard.sales_team,
     "Secondary Leadership KPIs": ninety.scorecard.secondary_leadership,
     "Sales Team": ninety.scorecard.sales_team,
     "CSR Team": ninety.scorecard.csr_team,

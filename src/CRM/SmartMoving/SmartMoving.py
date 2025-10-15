@@ -3,16 +3,10 @@ from src.CRM.SmartMoving.Pages.Sales import Sales
 from src.CRM.CRM import CustomerRelationshipManagementSoftware
 from selenium.webdriver.common.by import By
 
-from selenium.common.exceptions import (
-    WebDriverException,
-)
 from src.Login.LoginCredentials import LoginCredentials
 from src.CRM.SmartMoving.Pages.Calendars import Calendars
 from src.CRM.SmartMoving.Pages.Insights import Insights
 
-import os
-from datetime import datetime
-import traceback
 
 
 class SmartMoving(CustomerRelationshipManagementSoftware):

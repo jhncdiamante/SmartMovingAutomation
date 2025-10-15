@@ -1,6 +1,6 @@
 from selenium.common.exceptions import TimeoutException
 from src.CRM.SmartMoving.Pages.InsightsPage.InsightsPage import InsightsPage
-from src.SeleniumDriverumDriverumDriverumDriverumDriver.IDriver import IDriver
+from src.Drivers.IDriver import IDriver
 from src.CRM.SmartMoving.Filters.CalendarFilter import CalendarFilter
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait

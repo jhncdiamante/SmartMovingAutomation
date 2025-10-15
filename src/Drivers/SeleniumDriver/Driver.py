@@ -1,10 +1,12 @@
-from src.SeleniumDriver.IDriver import IDriver
+from src.Drivers.IDriver import IDriver
 import undetected_chromedriver as uc
+from selenium.webdriver import Edge, EdgeOptions
 
 class ChromeDriver(IDriver):
-    def __init__(self):
+    def __init__(self, headless=False):
         self._driver = None
         self.chrome_options = uc.ChromeOptions()
+        self._headless = headless
 
 
     def _set_up_options(self):
@@ -26,10 +28,14 @@ class ChromeDriver(IDriver):
             "--disable-infobars",
             "--disable-save-password-bubble",
             "--disable-notifications",
-            #"--headless",
         ]
+        
         for arg in args:
             self.chrome_options.add_argument(arg)
+
+        if self._headless:
+            self.chrome_options.add_argument("--headless")
+
 
         prefs = {"credentials_enable_service": False,
             "profile.password_manager_enabled": False}
@@ -47,7 +53,6 @@ class ChromeDriver(IDriver):
         self._set_up_options()
         self._driver = uc.Chrome(options=self.chrome_options, use_subprocess=True)
 
-from selenium.webdriver import Edge, EdgeOptions
 
 class EdgeDriver(IDriver):
     def __init__(self):
