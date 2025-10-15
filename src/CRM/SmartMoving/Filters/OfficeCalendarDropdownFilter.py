@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+
 class OfficeCalendarEventFilter(Filter):
 
     def click(self) -> bool:
@@ -34,6 +35,7 @@ class OfficeCalendarEventFilter(Filter):
                 EC.element_to_be_clickable((By.XPATH, target_xpath))
             )
             target_el.click()
+            time.sleep(10)
             return True
         except TimeoutException:
             self._logger.error(f"Failed to wait for value {target} to be clicked.")

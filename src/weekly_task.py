@@ -13,7 +13,7 @@ from src.CRM.SmartMoving.Filters.SalespersonPerformanceDateTypeFilter import Sal
 from src.CRM.SmartMoving.Filters.CalendarFilter import CalendarFilter
 from src.CRM.SmartMoving.Pages.InsightsPage.CompletedMoves import CompletedMoves
 from src.Login.LoginCredentials import LoginCredentials
-from src.SeleniumDriverumDriver.Driver import ChromeDriver
+from src.Drivers.SeleniumDriver.Driver import ChromeDriver
 from src.CRM.SmartMoving.SmartMoving import SmartMoving
 from src.CRM.SmartMoving.Pages.Calendars import Calendars
 from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter
@@ -50,7 +50,7 @@ from src.CRM.Ninety.Pages.Tables.CSRTeam import CSRTeam
 # ---------- helpers ----------
 def safe_div(a, b, default=0.0):
     try:
-        if b in (None, 0):
+        if a is None or b in (None, 0):
             return default
         return a / b
     except Exception:
@@ -121,20 +121,20 @@ WebDriverWait(driver, 10).until(lambda d: d.execute_script("return document.read
 today = date.today()
 start_of_week = today - timedelta(days=today.weekday())
 end_of_week = start_of_week + timedelta(days=6)
-date_str = f"{start_of_week} - {end_of_week}"
+date_str = f"{start_of_week} to {end_of_week}"
 
 # canonical new_row keys — normalized and exact
 new_row = {col: None for col in [
     "Date", "Weekly Total Revenue", "Accounting Job Revenue", "Accounting Storage Revenue", "$ Booked Sales",
-    "YoY Net Lead Growth %", "Erik Booking % On Site", "Booking % (No Survey Type)", "Valuation on 30% of jobs",
+    "YoY Net Lead Growth", "Erik Booking % On Site", "Booking % (No Survey Type)", "Valuation on 30% of Jobs",
     "Average Ticket Amount Completed Jobs", "Booked $ Next Month vs Forecast  (70% of Next Month Revenue Goal)",
-    "Aging A/R", "Completed Moves", "Valuation % of Revenue", "$ Booked PY", "YoY Booking ($)", "# Net Leads PY",
+    "Aging A/R", "Completed Moves", "Valuation % of Revenue", "$ Booked PY", "YoY Booking Growth $", "# Net Leads PY",
     "# Leads CY", "Bad Leads Received %", "Lost leads & opportunities from pricing", "# of movers", "# of drivers",
     "Erik - Total Booked $", "Erik - # Booked", "Erik - # of Estimates", "Erik - Estimate Accuracy Avg $",
     "Erik - Average Booked $ Amount", "Erik - Bad Lead % - by bad lead date received",
     "Erik - # of bundles of boxes per week", "Rebecca - Booked $", "Rebecca - Valuation Sold $",
     "Rebecca - Booking %", "Rebecca - Estimate Accuracy Avg $", "Rebecca - Dials", "Rebecca - Talk Time",
-    "Rebecca - 30% of Valuation Sales", "# of Valuation Closed"
+    "Rebecca - 30% of Valuation Sales",
 ]}
 new_row["Date"] = date_str
 
@@ -150,7 +150,7 @@ page.calendar_filter.click()
 page.calendar_filter.select_value("This Week")
 
 page.open_modal("Valuation")
-new_row["# of Valuation Closed"] = page.get_number_of_valuation_closed()
+num_of_valuation_closed = page.get_number_of_valuation_closed()
 total_valuation_cost = page.get_total_valuation_cost()
 page.close_modal()
 
@@ -174,7 +174,7 @@ page.open()
 page.calendar_filter.click()
 page.calendar_filter.select_value("This Week")
 new_row["$ Booked Sales"] = page.get_total_estimated_amount()
-new_row["YoY Booking ($)"] = safe_div(
+new_row["YoY Booking Growth $"] = safe_div(
     (new_row["$ Booked Sales"] or 0) - (new_row["$ Booked PY"] or 0),
     (new_row["$ Booked PY"] or 0)
 )
@@ -206,7 +206,7 @@ page.open()
 page.calendar_filter.click()
 page.calendar_filter.select_value("This Week")
 new_row["Completed Moves"] = page.get_total_moves()
-new_row["Valuation on 30% of jobs"] = safe_div(new_row["# of Valuation Closed"], new_row["Completed Moves"])
+new_row["Valuation on 30% of Jobs"] = safe_div(num_of_valuation_closed, new_row["Completed Moves"])
 new_row["Average Ticket Amount Completed Jobs"] = safe_div(new_row["Accounting Job Revenue"], new_row["Completed Moves"])
 page.close()
 
@@ -240,7 +240,7 @@ leads_received = page.get_leads_received()
 
 new_row["Bad Leads Received %"] = safe_div(total_bad_leads, leads_received)
 new_row["# Leads CY"] = (leads_received or 0) - (total_bad_leads or 0)
-new_row["YoY Net Lead Growth %"] = safe_div(
+new_row["YoY Net Lead Growth"] = safe_div(
     new_row["# Leads CY"] - new_row["# Net Leads PY"],
     new_row["# Net Leads PY"]
 )
@@ -350,10 +350,10 @@ metric_table = {
     "Leadership Team": [
         "Weekly Total Revenue",
         "$ Booked Sales",
-        "YoY Net Lead Growth %",
+        "YoY Net Lead Growth",
         "Erik Booking % On Site",
         "Booking % (No Survey Type)",
-        "Valuation on 30% of jobs",
+        "Valuation on 30% of Jobs",
         "Average Ticket Amount Completed Jobs",
         "Booked $ Next Month vs Forecast  (70% of Next Month Revenue Goal)",
         "Aging A/R",
@@ -362,7 +362,7 @@ metric_table = {
         "Completed Moves",
         "Valuation % of Revenue",
         "$ Booked PY",
-        "YoY Booking ($)",
+        "YoY Booking Growth $",
         "# Net Leads PY",
         "# Leads CY",
         "Bad Leads Received %",
@@ -390,21 +390,35 @@ metric_table = {
     ],
 }
 
-ninety_login_credentials = LoginCredentials(username=NINETY_USERNAME, password=NINETY_PASSWORD)
-sales_team = SalesTeam(driver)
-leadership_team_table = LeaderShipTeam(driver)
-secondary_leadership = SecondaryLeadership(driver)
-csr_team = CSRTeam(driver)
 
-scorecard = Scorecard(driver=driver, leadership_team_table=leadership_team_table,
+# ---------- cleanup ----------
+try:
+    driver.quit()
+except Exception as e:
+    logging.warning(f"Error quitting driver: {e}")
+
+from src.CRM.Ninety.Ninety import Ninety
+from src.Drivers.PlaywrightDriver.PlaywrightDriver import PlaywrightDriver
+
+driver = PlaywrightDriver(browser_type="chromium", headless=False)
+driver.set_up_driver()
+page = driver.page
+
+ninety_login_credentials = LoginCredentials(username=NINETY_USERNAME, password=NINETY_PASSWORD)
+sales_team = SalesTeam(page=page)
+leadership_team_table = LeaderShipTeam(page=page)
+secondary_leadership = SecondaryLeadership(page=page)
+csr_team = CSRTeam(page=page)
+
+scorecard = Scorecard(page=page, leadership_team_table=leadership_team_table,
                       sales_team=sales_team, secondary_leadership=secondary_leadership, csr_team=csr_team)
 
-ninety = Ninety(login_credentials=ninety_login_credentials, selenium_driver=driver, scorecard=scorecard)
+ninety = Ninety(login_credentials=ninety_login_credentials, page=page, scorecard=scorecard)
 ninety.login()
 ninety.scorecard.open()
 
 table_map = {
-    "Leadership Team": ninety.scorecard.sales_team,
+    "Leadership Team": ninety.scorecard.leadership_team_table,
     "Secondary Leadership KPIs": ninety.scorecard.secondary_leadership,
     "Sales Team": ninety.scorecard.sales_team,
     "CSR Team": ninety.scorecard.csr_team,
@@ -423,10 +437,5 @@ for table_name, metrics in metric_table.items():
         # send value (table.set_value is assumed to handle locating and sending keys)
         table.set_value(metric, value=value, week=str(start_of_week))
         # small wait for the value propagation
-        time.sleep(0.5)
+        time.sleep(2)
 
-# ---------- cleanup ----------
-try:
-    driver.quit()
-except Exception as e:
-    logging.warning(f"Error quitting driver: {e}")

@@ -27,7 +27,7 @@ class AccountingStorageRevenue(InsightsPage):
         try:
             net_invoiced_value = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
                 EC.visibility_of_element_located((By.XPATH, xpath))
-            )  
+            )
         except TimeoutException:
             self._logger.warning("Failed to get net invoiced under 60 seconds.")
             return None
