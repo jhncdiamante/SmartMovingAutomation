@@ -287,8 +287,8 @@ new_row["Erik - Average Booked $ Amount"] = safe_div(
 settings_page = smartmoving.settings
 settings_page.open()
 crew_members = settings_page.get_all_crew_members()
-new_row["# of Movers"] = len([n for n in crew_members if "(D)(CL)" not in n])
-new_row["# of Drivers"] = len([n for n in crew_members if "(D)" in n and "(D)(CL)" not in n])
+new_row["# of Movers"] = len([n for n in crew_members if "(" not in n])
+new_row["# of Drivers"] = len([n for n in crew_members if "(D)" in n])
 
 # ---------- GOOGLE SHEETS ----------
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -316,8 +316,13 @@ existing = calendar_ws.get_all_values()
 if existing and len(existing) > 1:
     cols = existing[0]
     df = pd.DataFrame(existing[1:], columns=cols)
+    df.dropna(subset=['Drop-Off Date', 'No. of Bundles'], inplace=True)
+    df["Drop-Off Date"] = pd.to_datetime(df["Drop-Off Date"], errors="coerce")
     df["No. of Bundles"] = pd.to_numeric(df["No. of Bundles"], errors="coerce").fillna(0)
-    new_row["Erik - # of bundles of boxes per week"] = int(df["No. of Bundles"].sum(skipna=True))
+    start, end = pd.Timestamp(start_of_week), pd.Timestamp(end_of_week)
+    wdf = df[(df["Drop-Off Date"] >= start) & (df["Drop-Off Date"] <= end)]
+    new_row["Erik - # of bundles of boxes per week"] = int(wdf["No. of Bundles"].sum(skipna=True))
+
 
 # val-sold
 val_ws = sheet.worksheet("val-sold")
