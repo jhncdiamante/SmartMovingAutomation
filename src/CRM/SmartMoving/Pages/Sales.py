@@ -66,19 +66,19 @@ class Sales(SmartMovingPage):
 
         
         count = 0
-        date_today = datetime.today().date()
+        #date_today = datetime.today().date()
         while True:
             dates = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
                 EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "sm-viper-date-time-column-template"))
             )
 
-            i = len(dates) - 1
-            while i >= 0:
-                date = datetime.strptime(dates[i].text.strip(), "%m/%d/%Y %I:%M %p").date()
-                if date != date_today:
-                    break
-                count += 1
-                i-=1
+            count += len(dates)
+            #while i >= 0:
+                #date = datetime.strptime(dates[i].text.strip(), "%m/%d/%Y %I:%M %p").date()
+                #if date != date_today:
+                #    break
+            #    count += 1
+            #    i-=1
             next_button = self._get_next_button()
             if not next_button:
                 break
