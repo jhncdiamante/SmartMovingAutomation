@@ -67,8 +67,8 @@ class SalespersonPerformance(InsightsPage):
                 last_year_start = (start_of_week - timedelta(days=1)).replace(year=start_of_week.year - 1)
                 last_year_end = (end_of_week - timedelta(days=1)).replace(year=end_of_week.year - 1)
 
-            start_iso = f"{last_year_start.isoformat()}T00:00:00.000+08:00"
-            end_iso = f"{last_year_end.isoformat()}T23:59:59.999+08:00"
+            start_iso = f"{last_year_start.isoformat()}T00:00:00.000-04:00"
+            end_iso = f"{last_year_end.isoformat()}T23:59:59.999-04:00"
                         
             payload = {
                 "parameters": [

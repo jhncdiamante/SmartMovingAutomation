@@ -129,13 +129,14 @@ new_row = {col: None for col in [
     "YoY Net Lead Growth", "Erik Booking % On Site", "Booking % (No Survey Type)", "Valuation on 30% of Jobs",
     "Average Ticket Amount Completed Jobs", "Booked $ Next Month vs Forecast  (70% of Next Month Revenue Goal)",
     "Aging A/R", "Completed Moves", "Valuation % of Revenue", "$ Booked PY", "YoY Booking Growth $", "# Net Leads PY",
-    "# Leads CY", "Bad Leads Received %", "Lost leads & opportunities from pricing", "# of movers", "# of drivers",
+    "# Net Leads CY", "Bad Leads Received %", "Lost Leads & Opportunities from Pricing", "# of Movers", "# of Drivers",
     "Erik - Total Booked $", "Erik - # Booked", "Erik - # of Estimates", "Erik - Estimate Accuracy Avg $",
     "Erik - Average Booked $ Amount", "Erik - Bad Lead % - by bad lead date received",
     "Erik - # of bundles of boxes per week", "Rebecca - Booked $", "Rebecca - Valuation Sold $",
-    "Rebecca - Booking %", "Rebecca - Estimate Accuracy Avg $", "Rebecca - Dials", "Rebecca - Talk Time",
-    "Rebecca - 30% of Valuation Sales",
+    "Rebecca - Booking %", "Rebecca - Estimate Accuracy", "Rebecca - Dials", "Rebecca - Talk Time",
 ]}
+
+
 new_row["Date"] = date_str
 
 insights_page = smartmoving.insights
@@ -238,10 +239,10 @@ page.calendar_filter.select_value("This Week")
 total_bad_leads = page.get_bad_leads()
 leads_received = page.get_leads_received()
 
-new_row["Bad Leads Received %"] = safe_div(total_bad_leads, leads_received)
-new_row["# Leads CY"] = (leads_received or 0) - (total_bad_leads or 0)
+new_row["Bad Leads Received %"] = safe_div(total_bad_leads, leads_received) * 100
+new_row["# Net Leads CY"] = (leads_received or 0) - (total_bad_leads or 0)
 new_row["YoY Net Lead Growth"] = safe_div(
-    new_row["# Leads CY"] - new_row["# Net Leads PY"],
+    new_row["# Net Leads CY"] - new_row["# Net Leads PY"],
     new_row["# Net Leads PY"]
 )
 
@@ -255,7 +256,7 @@ page.side_panel_filter.click()
 page.side_panel_filter.select_value("Sales Person", ["Erik Cairo", "Rebecca Perez"])
 page.side_panel_filter.apply()
 page.side_panel_filter.close()
-new_row["Rebecca - Booking %"] = safe_div(leads_received - total_bad_leads, leads_received)
+new_row["Rebecca - Booking %"] = safe_div(new_row["Rebecca - Booked $"], leads_received - total_bad_leads)
 page.close()
 
 # ---------- LOST LEADS & OPP SUMMARY ----------
@@ -265,7 +266,7 @@ page.date_filter.click()
 page.date_filter.select_value("By Lost Date")
 page.calendar_filter.click()
 page.calendar_filter.select_value("This Week")
-new_row["Lost leads & opportunities from pricing"] = page.get_price_too_high()
+new_row["Lost Leads & Opportunities from Pricing"] = page.get_price_too_high()
 page.close()
 
 # ---------- ESTIMATE ACCURACY SUMMARY ----------
@@ -274,7 +275,7 @@ page.open()
 page.calendar_filter.click()
 page.calendar_filter.select_value("Last Week")
 new_row["Erik - Estimate Accuracy Avg $"] = page.get_average_price("Erik Cairo")
-new_row["Rebecca - Estimate Accuracy Avg $"] = page.get_average_price("Rebecca Perez")
+new_row["Rebecca - Estimate Accuracy"] = page.get_average_price("Rebecca Perez")
 page.close()
 
 new_row["Erik - Average Booked $ Amount"] = safe_div(
@@ -286,8 +287,8 @@ new_row["Erik - Average Booked $ Amount"] = safe_div(
 settings_page = smartmoving.settings
 settings_page.open()
 crew_members = settings_page.get_all_crew_members()
-new_row["# of movers"] = len([n for n in crew_members if "(D)(CL)" not in n])
-new_row["# of drivers"] = len([n for n in crew_members if "(D)" in n])
+new_row["# of Movers"] = len([n for n in crew_members if "(D)(CL)" not in n])
+new_row["# of Drivers"] = len([n for n in crew_members if "(D)" in n and "(D)(CL)" not in n])
 
 # ---------- GOOGLE SHEETS ----------
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -307,6 +308,16 @@ if existing and len(existing) > 1:
     start, end = pd.Timestamp(start_of_week), pd.Timestamp(end_of_week)
     wdf = df[(df["Date"] >= start) & (df["Date"] <= end)]
     new_row["Erik - # of Estimates"] = int(wdf["# of Apt"].sum(skipna=True))
+
+
+# boxes
+calendar_ws = sheet.worksheet("boxes")
+existing = calendar_ws.get_all_values()
+if existing and len(existing) > 1:
+    cols = existing[0]
+    df = pd.DataFrame(existing[1:], columns=cols)
+    df["No. of Bundles"] = pd.to_numeric(df["No. of Bundles"], errors="coerce").fillna(0)
+    new_row["Erik - # of bundles of boxes per week"] = int(df["No. of Bundles"].sum(skipna=True))
 
 # val-sold
 val_ws = sheet.worksheet("val-sold")
@@ -364,11 +375,11 @@ metric_table = {
         "$ Booked PY",
         "YoY Booking Growth $",
         "# Net Leads PY",
-        "# Leads CY",
+        "# Net Leads CY",
         "Bad Leads Received %",
-        "Lost leads & opportunities from pricing",
-        "# of movers",
-        "# of drivers",
+        "Lost Leads & Opportunities from Pricing",
+        "# of Movers",
+        "# of Drivers",
     ],
     "Sales Team": [
         "Erik - Total Booked $",
@@ -383,10 +394,9 @@ metric_table = {
         "Rebecca - Booked $",
         "Rebecca - Valuation Sold $",
         "Rebecca - Booking %",
-        "Rebecca - Estimate Accuracy Avg $",
+        "Rebecca - Estimate Accuracy",
         "Rebecca - Dials",
         "Rebecca - Talk Time",
-        "Rebecca - 30% of Valuation Sales",
     ],
 }
 
