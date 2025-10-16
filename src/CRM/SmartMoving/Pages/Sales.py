@@ -57,28 +57,40 @@ class Sales(SmartMovingPage):
         except WebDriverException as e:
             self._logger.warning(f"Failed to get next button due to error: {e}")
 
+
+    def _count(self, dates, item):
+        
+        if item != "Stale Opportunities":
+            date_today = datetime.today().date()
+
+            count = 0
+            i = len(dates) - 1
+            while i >= 0:
+                date = datetime.strptime(dates[i].text.strip(), "%m/%d/%Y %I:%M %p").date()
+                if date != date_today:
+                    break
+                count += 1
+                i-=1
+            return count
+        else:
+            return len(dates)
+
+
     def _get_dates(self, item: str) -> int:
+
         xpath = f"//h5[normalize-space(text())='{item}']/parent::div"
         item_el = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
             EC.visibility_of_element_located((By.XPATH, xpath))
         )
         item_el.click()
 
-        
         count = 0
-        #date_today = datetime.today().date()
         while True:
             dates = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
                 EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "sm-viper-date-time-column-template"))
             )
 
-            count += len(dates)
-            #while i >= 0:
-                #date = datetime.strptime(dates[i].text.strip(), "%m/%d/%Y %I:%M %p").date()
-                #if date != date_today:
-                #    break
-            #    count += 1
-            #    i-=1
+            count += self._count(dates, item)
             next_button = self._get_next_button()
             if not next_button:
                 break
