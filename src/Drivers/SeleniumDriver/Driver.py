@@ -3,7 +3,7 @@ import undetected_chromedriver as uc
 from selenium.webdriver import Edge, EdgeOptions
 
 class ChromeDriver(IDriver):
-    def __init__(self, headless=False):
+    def __init__(self, headless=True):
         self._driver = None
         self.chrome_options = uc.ChromeOptions()
         self._headless = headless

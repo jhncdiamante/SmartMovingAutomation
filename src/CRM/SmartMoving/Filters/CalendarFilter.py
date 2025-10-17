@@ -83,6 +83,10 @@ class CalendarFilter(Filter):
         self._logger.info("Clicking apply button...")
 
         button_el = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(EC.element_to_be_clickable((By.XPATH, button_xpath)))
+        
+        self._driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", button_el)
+
+        time.sleep(0.5)
         button_el.click()
         self._logger.info("Apply button clicked...")
         time.sleep(5)
