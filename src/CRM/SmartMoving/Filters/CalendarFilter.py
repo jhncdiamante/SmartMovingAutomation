@@ -45,6 +45,9 @@ class CalendarFilter(Filter):
     def click(self):
         filter_icon = self._locate()
         time.sleep(3)
+        self._driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", filter_icon)
+
+        time.sleep(0.5)
         filter_icon.click()
 
     @retryable(max_retries=3, delay=2)

@@ -26,6 +26,8 @@ class OfficeCalendarEventFilter(Filter):
             return False
 
         try:
+            self._driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", dropdown)
+
             dropdown.click()
             WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "ngb-popover-window.popover.show")))   
             self._logger.info("Successfully clicked filter button.")
@@ -46,7 +48,6 @@ class OfficeCalendarEventFilter(Filter):
             target_el = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
                 EC.element_to_be_clickable((By.XPATH, target_xpath))
             )
-            self._driver.save_screenshot("debug_screenshot.png")
 
             self._driver.execute_script("arguments[0].scrollIntoView(true);", target_el)
             self._driver.execute_script("arguments[0].click();", target_el)
@@ -72,6 +73,8 @@ class DefaultFilter(OfficeCalendarEventFilter):
             return False
 
         try:
+            self._driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", dropdown)
+
             dropdown.click()
             WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "ngb-popover-window.popover.show")))   
             self._logger.info("Successfully clicked filter button.")
