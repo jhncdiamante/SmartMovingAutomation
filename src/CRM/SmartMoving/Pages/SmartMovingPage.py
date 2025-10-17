@@ -14,5 +14,6 @@ class SmartMovingPage(SeleniumPage):
     def open(self):
         self._driver.get(self._route)
         self._wait_for_complete_loading()
+        
 
     

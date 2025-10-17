@@ -20,7 +20,6 @@ class ChromeDriver(IDriver):
             "--no-sandbox",
             "--enable-unsafe-swiftshader",
             "--disable-dev-shm-usage",
-            "--window-size=1920,1080",
             "--disable-browser-side-navigation",
             "--disable-features=VizDisplayCompositor",
             "--disable-blink-features=AutomationControlled",
@@ -28,6 +27,7 @@ class ChromeDriver(IDriver):
             "--disable-infobars",
             "--disable-save-password-bubble",
             "--disable-notifications",
+            "--window-size=1920,1080"
             
         ]
         
@@ -35,7 +35,7 @@ class ChromeDriver(IDriver):
             self.chrome_options.add_argument(arg)
 
         if self._headless:
-            self.chrome_options.add_argument("--headless")
+            self.chrome_options.add_argument("--headless=new")
 
 
         prefs = {"credentials_enable_service": False,

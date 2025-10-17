@@ -9,3 +9,4 @@ test.py
 
 Dockerfile
 run_all.sh
+*.png
