@@ -2,7 +2,7 @@ from src.Helpers.logging_config import setup_logger
 from src.CRM.SeleniumPage import SeleniumPage
 
 class SmartMovingPage(SeleniumPage):
-    DEFAULT_TIMEOUT = 60
+    DEFAULT_TIMEOUT = 120
     def __init__(self, route: str, driver):
         self._route = route
         self._driver = driver

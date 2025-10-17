@@ -8,7 +8,7 @@ from undetected_chromedriver import By
 
 class SeleniumPage(Page):
     
-    DEFAULT_TIMEOUT = 60
+    DEFAULT_TIMEOUT = 120
     def __init__(self, driver: IDriver):
         self._driver = driver
         cls = self.__class__

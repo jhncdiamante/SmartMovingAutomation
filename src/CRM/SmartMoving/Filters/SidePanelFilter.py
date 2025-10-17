@@ -5,6 +5,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from src.CRM.Features.Filter import Filter
 import time
+from src.Helpers.retryable import retryable
+
 
 class SidePanelFilter(Filter):
     def _wait_for_clickable(self, xpath: str, timeout: int = 60) -> WebElement | None:
@@ -19,6 +21,7 @@ class SidePanelFilter(Filter):
     def _locator(self) -> tuple[By, str]:
         return By.XPATH, "//button[contains(text(), 'Filters')]"
 
+    @retryable(delay=3)
     def click(self) -> bool:
         filter_button = self._locate()
         if not filter_button:
@@ -30,6 +33,7 @@ class SidePanelFilter(Filter):
             return True
         except WebDriverException as e:
             self._logger.error(f"Failed to click side panel filter due to error: {e}")
+        raise WebDriverException
 
     def select_value(self, filter_type: str, selected_values: list) -> bool:
         filter_type_xpath = f"//sm-viper-filter-list-slideout//sm-filter-list//sm-button//button//div/div[normalize-space(text())='{filter_type}']"
@@ -66,6 +70,7 @@ class SidePanelFilter(Filter):
             time.sleep(2)
         return True
 
+    @retryable(delay=3)
     def apply(self) -> bool:
         apply_xpath = "//button[normalize-space(.)='Apply']"
         apply_button = self._wait_for_clickable(apply_xpath)
@@ -76,7 +81,7 @@ class SidePanelFilter(Filter):
 
         try:
             apply_button.click()
-            WebDriverWait(self._driver, 60).until_not(
+            WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until_not(
                 EC.presence_of_element_located((By.XPATH, apply_xpath))
             )
             time.sleep(3)
@@ -89,7 +94,7 @@ class SidePanelFilter(Filter):
             self._logger.error(f"Failed to click Apply Button due to error: {e}")
         raise Exception
 
-
+    @retryable(delay=3)
     def close(self) -> bool:
         close_xpath = "//span[@data-test-id='close-panel']"
         close_button = self._wait_for_clickable(close_xpath)
@@ -110,3 +115,4 @@ class SidePanelFilter(Filter):
             self._logger.error("Failed to wait for panel to close.")
         except WebDriverException as e:
             self._logger.error(f"Failed to close due to error: {e}")
+        raise WebDriverException

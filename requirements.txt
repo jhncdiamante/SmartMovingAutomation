@@ -3,4 +3,5 @@ gspread
 setuptools
 oauth2client
 pandas
+playwright
 

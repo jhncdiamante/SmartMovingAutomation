@@ -11,7 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class BookingPercentBySurveyType(InsightsPage):
-    DEFAULT_TIMEOUT = 60
+    DEFAULT_TIMEOUT = 120
 
     def __init__(self, driver: IDriver, calendar_filter: CalendarFilter):
         super().__init__(driver)
@@ -37,7 +37,7 @@ class BookingPercentBySurveyType(InsightsPage):
             return
 
         try:
-            return float(total_booked_percentage.text.replace("%", "").strip()) / 100
+            return float(total_booked_percentage.text.replace("%", "").strip())
         except ValueError:
             self._logger.warning(f"Unable to convert {total_booked_percentage.text} to float.")
 

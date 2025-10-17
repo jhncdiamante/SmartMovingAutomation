@@ -19,6 +19,8 @@ class Sales(SmartMovingPage):
         self.salesperson_filter = sales_dropdown_filter
 
     def _get_count(self, item: str, table_name: str) -> int:
+        self._logger.info(f"Getting {item}")
+
         if table_name == "Open Items":
             # Locate the item_name element's parent's next sibling that contains the respective item count
             xpath = f"//h5[normalize-space(text())='{item}']/parent::div/following-sibling::h2[1]"
@@ -41,7 +43,7 @@ class Sales(SmartMovingPage):
         return self._get_count("Unread Messages", "Open Items")
 
     def get_stale_opportunities(self) -> int:
-        return self._get_dates("Stale Opportunities")
+        return self._get_count("Stale Opportunities", "Open Items")
 
     def get_inventory_submissions(self) -> int:
         return self._get_dates("Inventory Submissions")
@@ -58,26 +60,22 @@ class Sales(SmartMovingPage):
             self._logger.warning(f"Failed to get next button due to error: {e}")
 
 
-    def _count(self, dates, item):
-        
-        if item != "Stale Opportunities":
-            date_today = datetime.today().date()
+    def _count(self, dates):
+        date_today = datetime.today().date()
 
-            count = 0
-            i = len(dates) - 1
-            while i >= 0:
-                date = datetime.strptime(dates[i].text.strip(), "%m/%d/%Y %I:%M %p").date()
-                if date != date_today:
-                    break
-                count += 1
-                i-=1
-            return count
-        else:
-            return len(dates)
+        count = 0
+        i = len(dates) - 1
+        while i >= 0:
+            date = datetime.strptime(dates[i].text.strip(), "%m/%d/%Y %I:%M %p").date()
+            if date != date_today:
+                break
+            count += 1
+            i-=1
+        return count
 
 
     def _get_dates(self, item: str) -> int:
-
+        self._logger.info(f"Getting {item}")
         xpath = f"//h5[normalize-space(text())='{item}']/parent::div"
         item_el = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
             EC.visibility_of_element_located((By.XPATH, xpath))
@@ -86,11 +84,15 @@ class Sales(SmartMovingPage):
 
         count = 0
         while True:
-            dates = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
-                EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "sm-viper-date-time-column-template"))
-            )
+            try:
+                dates = WebDriverWait(self._driver, 15).until(
+                    EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "sm-viper-date-time-column-template"))
+                )
+            except TimeoutException:
+                self._logger("No entries found")
+                break
 
-            count += self._count(dates, item)
+            count += self._count(dates)
             next_button = self._get_next_button()
             if not next_button:
                 break
@@ -105,11 +107,12 @@ class Sales(SmartMovingPage):
             time.sleep(5)
 
 
-
+        self._logger.info("Closing button")
         close_button = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
-            EC.element_to_be_clickable((By.CLASS_NAME, "modal-close icon-close"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, ".modal-close.icon-close"))
         )
         close_button.click()
+        self._logger.info(f"Extracted {item}: {count}")
 
         return count
 

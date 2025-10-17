@@ -7,7 +7,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from dotenv import load_dotenv
 
 from src.Login.LoginCredentials import LoginCredentials
-from src.SeleniumDriver.Driver import ChromeDriver
+from src.Drivers.SeleniumDriver.Driver import ChromeDriver
 from src.CRM.SmartMoving.SmartMoving import SmartMoving
 from src.CRM.SmartMoving.Pages.Calendars import Calendars
 from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, OfficeCalendarUserFilter
@@ -62,7 +62,7 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 creds = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", scope)
 client = gspread.authorize(creds)
 
-sheet = client.open("DAILY KPIS") 
+sheet = client.open("Copy of Daily KPIs - MasterMovers") 
 sales_worksheet = sheet.worksheet("agent-dashboard") 
 
 date_today = date.today().strftime("%Y-%m-%d")
@@ -76,7 +76,6 @@ for salesperson in salespersons:
     smartmoving.sales.salesperson_filter.click()
     smartmoving.sales.salesperson_filter.select_value(salesperson)
     time.sleep(5)
-    smartmoving.screenshot(page_name=f"sales_{salesperson}")
 
     # Create new data row
     new_row = {

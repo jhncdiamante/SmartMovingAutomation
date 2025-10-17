@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class EstimateAccuracySummary(InsightsPage):
-    DEFAULT_TIMEOUT = 60
+    DEFAULT_TIMEOUT = 120
 
     def __init__(self, driver: IDriver, calendar_filter: CalendarFilter):
         super().__init__(driver)

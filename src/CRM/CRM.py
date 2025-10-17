@@ -17,7 +17,7 @@ import os
 from datetime import datetime
 
 class CustomerRelationshipManagementSoftware(ABC):
-    DEFAULT_TIMEOUT = 60
+    DEFAULT_TIMEOUT = 120
     def __init__(self, login_credentials: LoginCredentials, selenium_driver):
         self._login_credentials = login_credentials
         self._driver = selenium_driver

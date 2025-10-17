@@ -14,7 +14,7 @@ from src.Helpers.logging_config import setup_logger
 
 
 class ScorecardTable:
-    DEFAULT_TIMEOUT = 60_000  # milliseconds
+    DEFAULT_TIMEOUT = 120_000  # milliseconds
 
     def __init__(self, page: PlaywrightPage):
         self._page = page

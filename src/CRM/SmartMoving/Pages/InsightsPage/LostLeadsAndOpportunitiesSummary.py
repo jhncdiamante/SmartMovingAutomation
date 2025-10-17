@@ -11,7 +11,7 @@ from src.CRM.SmartMoving.Filters.LostLeadsAndOpportunitiesSummaryDateFilter impo
 
 
 class LostLeadsAndOpportunitiesSummary(InsightsPage):
-    DEFAULT_TIMEOUT = 60
+    DEFAULT_TIMEOUT = 120
     def __init__(self, driver: IDriver, calendar_filter: CalendarFilter, date_filter: LostLeadsAndOpportunitiesSummaryDateFilter):
         super().__init__(driver)
         self.calendar_filter = calendar_filter

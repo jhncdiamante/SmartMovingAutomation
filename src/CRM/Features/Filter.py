@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
 class Filter(ABC):
-    DEFAULT_TIMEOUT = 60
+    DEFAULT_TIMEOUT = 120
     def __init__(self, driver: IDriver):
         self._driver = driver
         cls = self.__class__

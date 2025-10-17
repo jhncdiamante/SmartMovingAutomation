@@ -9,11 +9,11 @@ from src.CRM.SmartMoving.Pages.InsightsPage.InsightsPage import InsightsPage
 from src.Drivers.IDriver import IDriver
 from src.CRM.SmartMoving.Filters.AccountingJobRevenueDateTypeFilter import AccountingJobRevenueDateFilter
 from src.CRM.SmartMoving.Filters.CalendarFilter import CalendarFilter
-
+import time
 
 class AccountingJobRevenue(InsightsPage):
 
-    DEFAULT_TIMEOUT = 60
+    DEFAULT_TIMEOUT = 120
 
     def __init__(self, driver: IDriver, date_filter: AccountingJobRevenueDateFilter, calendar_filter: CalendarFilter):
         super().__init__(driver)
@@ -64,22 +64,22 @@ class AccountingJobRevenue(InsightsPage):
         """Opens a modal corresponding to a specific metric."""
         item_el_xpath = f"//div[@class='clickable-metric' and normalize-space(text())='{item}']"
         self._logger.info(f"Attempting to open modal for: {item}")
-
+        time.sleep(3)
         element = self._wait_for_element((By.XPATH, item_el_xpath), condition=EC.element_to_be_clickable)
         if not element:
             self._logger.warning(f"Failed to open modal {item}.")
             raise Exception
-
-        try:
-            element.click()
-            self._logger.info(f"Modal for '{item}' opened successfully.")
-            return True
-        except (StaleElementReferenceException, WebDriverException) as e:
-            self._logger.error(f"Failed to click modal element '{item}': {e}")
-        except Exception as e:
-            self._logger.warning(f"Failed to open modal due to error: {e}")
+        for _ in range(3):
+            try:
+                element.click()
+                self._logger.info(f"Modal for '{item}' opened successfully.")
+                return True
+            except (StaleElementReferenceException, WebDriverException) as e:
+                self._logger.error(f"Failed to click modal element '{item}': {e}")
+            except Exception as e:
+                self._logger.warning(f"Failed to open modal due to error: {e}")
         
-        raise Exception
+        raise Exception(f"Failed to open modal for {item}")
         
 
 
@@ -97,7 +97,7 @@ class AccountingJobRevenue(InsightsPage):
             return True
         except (StaleElementReferenceException, WebDriverException) as e:
             self._logger.warning(f"Failed to close modal: {e}")
-            return False
+            raise Exception("Failed to close modal.")
 
     def get_number_of_valuation_closed(self) -> int:
         """Returns the number of closed valuations."""

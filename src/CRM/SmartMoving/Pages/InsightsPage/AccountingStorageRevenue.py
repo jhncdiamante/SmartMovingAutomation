@@ -11,7 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class AccountingStorageRevenue(InsightsPage):
-    DEFAULT_TIMEOUT = 60
+    DEFAULT_TIMEOUT = 120
 
     def __init__(self, driver: IDriver, quick_date_filter: QuickDateFilter):
         super().__init__(driver)

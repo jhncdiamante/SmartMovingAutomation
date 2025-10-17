@@ -4,3 +4,8 @@ venv/
 screenshots/
 *.log
 test.py
+
+*.csv
+
+Dockerfile
+run_all.sh

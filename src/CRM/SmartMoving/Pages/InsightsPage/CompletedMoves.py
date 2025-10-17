@@ -50,7 +50,7 @@ class CompletedMoves(InsightsPage):
 
             while True:
                 try:
-                    rows = WebDriverWait(self._driver, 15).until(
+                    rows = WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(
                         EC.visibility_of_all_elements_located((By.XPATH, rows_xpath))
                     ) 
                     rows = [row for row in rows if row.text.strip() and float(row.text.replace("$", "").replace(",", "").strip()) > 0]
@@ -58,7 +58,7 @@ class CompletedMoves(InsightsPage):
                     if page_count > 0:
                         count += page_count
                     self._logger.info(f"Found {page_count} moves (Total so far: {count}).")
-
+                    time.sleep(2)
                     next_button_li = self._get_next_button()
                     if not next_button_li:
                         break

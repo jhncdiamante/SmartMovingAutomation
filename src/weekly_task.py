@@ -6,7 +6,6 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from dotenv import load_dotenv
 
-from selenium.webdriver.support.ui import WebDriverWait
 
 from src.CRM.SmartMoving.Filters.QuickDateFilter import QuickDateFilter
 from src.CRM.SmartMoving.Filters.SalespersonPerformanceDateTypeFilter import SalespersonPerformanceDateTypeFilter
@@ -116,7 +115,6 @@ smartmoving = SmartMoving(
 
 # login
 smartmoving.login()
-WebDriverWait(driver, 10).until(lambda d: d.execute_script("return document.readyState") == "complete")
 
 today = date.today()
 start_of_week = today - timedelta(days=today.weekday())
@@ -156,7 +154,7 @@ total_valuation_cost = page.get_total_valuation_cost()
 page.close_modal()
 
 new_row["Accounting Job Revenue"] = page.get_net_revenue()
-new_row["Valuation % of Revenue"] = safe_div(total_valuation_cost, new_row["Accounting Job Revenue"])
+new_row["Valuation % of Revenue"] = safe_div(total_valuation_cost, new_row["Accounting Job Revenue"]) * 100
 page.close()
 
 # ---------- ACCOUNTING STORAGE REVENUE ----------
@@ -178,7 +176,7 @@ new_row["$ Booked Sales"] = page.get_total_estimated_amount()
 new_row["YoY Booking Growth $"] = safe_div(
     (new_row["$ Booked Sales"] or 0) - (new_row["$ Booked PY"] or 0),
     (new_row["$ Booked PY"] or 0)
-)
+) * 100
 page.side_panel_filter.click()
 page.side_panel_filter.select_value("Sales Person", ["Erik Cairo"])
 page.side_panel_filter.apply()
@@ -190,6 +188,7 @@ page.side_panel_filter.select_value("Sales Person", ["Erik Cairo", "Rebecca Pere
 page.side_panel_filter.apply()
 page.side_panel_filter.close()
 new_row["Rebecca - Booked $"] = page.get_total_estimated_amount()
+rebecca_total_booked_count = page.get_total_booked_count()
 page.close()
 
 # ---------- BOOKING PERCENT BY SURVEY TYPE ----------
@@ -207,8 +206,8 @@ page.open()
 page.calendar_filter.click()
 page.calendar_filter.select_value("This Week")
 new_row["Completed Moves"] = page.get_total_moves()
-new_row["Valuation on 30% of Jobs"] = safe_div(num_of_valuation_closed, new_row["Completed Moves"])
-new_row["Average Ticket Amount Completed Jobs"] = safe_div(new_row["Accounting Job Revenue"], new_row["Completed Moves"])
+new_row["Valuation on 30% of Jobs"] = safe_div(num_of_valuation_closed, new_row["Completed Moves"]) * 100
+new_row["Average Ticket Amount Completed Jobs"] = safe_div(new_row["Accounting Job Revenue"], new_row["Completed Moves"]) * 100
 page.close()
 
 # ---------- BOOKED OPP BY SERVICE DATE ----------
@@ -244,19 +243,22 @@ new_row["# Net Leads CY"] = (leads_received or 0) - (total_bad_leads or 0)
 new_row["YoY Net Lead Growth"] = safe_div(
     new_row["# Net Leads CY"] - new_row["# Net Leads PY"],
     new_row["# Net Leads PY"]
-)
+) * 100
 
 page.side_panel_filter.click()
 page.side_panel_filter.select_value("Sales Person", ["Erik Cairo"])
 page.side_panel_filter.apply()
 page.side_panel_filter.close()
-new_row["Erik - Bad Lead % - by bad lead date received"] = safe_div(page.get_bad_leads(), page.get_leads_received())
+new_row["Erik - Bad Lead % - by bad lead date received"] = safe_div(page.get_bad_leads(), page.get_leads_received()) * 100
 
 page.side_panel_filter.click()
 page.side_panel_filter.select_value("Sales Person", ["Erik Cairo", "Rebecca Perez"])
 page.side_panel_filter.apply()
 page.side_panel_filter.close()
-new_row["Rebecca - Booking %"] = safe_div(new_row["Rebecca - Booked $"], leads_received - total_bad_leads)
+
+total_bad_leads = page.get_bad_leads()
+leads_received = page.get_leads_received()
+new_row["Rebecca - Booking %"] = safe_div(rebecca_total_booked_count, leads_received - total_bad_leads) * 100
 page.close()
 
 # ---------- LOST LEADS & OPP SUMMARY ----------
@@ -281,13 +283,13 @@ page.close()
 new_row["Erik - Average Booked $ Amount"] = safe_div(
     new_row["Erik - Total Booked $"],
     new_row["Erik - # Booked"]
-)
+) * 100
 
 # ---------- SETTINGS: crew members ----------
 settings_page = smartmoving.settings
 settings_page.open()
 crew_members = settings_page.get_all_crew_members()
-new_row["# of Movers"] = len([n for n in crew_members if "(" not in n])
+new_row["# of Movers"] = len([n for n in crew_members if "(" not in n]) - 1
 new_row["# of Drivers"] = len([n for n in crew_members if "(D)" in n])
 
 # ---------- GOOGLE SHEETS ----------
@@ -371,7 +373,7 @@ metric_table = {
         "Booking % (No Survey Type)",
         "Valuation on 30% of Jobs",
         "Average Ticket Amount Completed Jobs",
-        "Booked $ Next Month vs Forecast  (70% of Next Month Revenue Goal)",
+        "Booked $ Next Month vs Forecast (70% of Next Month Revenue Goal)",
         "Aging A/R",
     ],
     "Secondary Leadership KPIs": [
