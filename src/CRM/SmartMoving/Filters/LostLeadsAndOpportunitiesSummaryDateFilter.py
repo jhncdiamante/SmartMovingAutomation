@@ -1,10 +1,10 @@
 
-from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter
+from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter, DefaultFilter
 
 from selenium.webdriver.common.by import By
 
 
-class LostLeadsAndOpportunitiesSummaryDateFilter(OfficeCalendarEventFilter):
+class LostLeadsAndOpportunitiesSummaryDateFilter(DefaultFilter):
 
     @property
     def _locator(self):

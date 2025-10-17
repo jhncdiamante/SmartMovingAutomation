@@ -1,12 +1,12 @@
 
-from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import OfficeCalendarEventFilter
+from src.CRM.SmartMoving.Filters.OfficeCalendarDropdownFilter import DefaultFilter
 
 import time
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
-class SalesDashboardSalesPersonFilter(OfficeCalendarEventFilter):
+class SalesDashboardSalesPersonFilter(DefaultFilter):
     @property
     def _locator(self):
         return By.XPATH, "//span[@class='display-value']"

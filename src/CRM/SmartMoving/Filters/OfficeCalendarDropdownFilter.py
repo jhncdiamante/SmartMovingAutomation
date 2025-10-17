@@ -7,10 +7,19 @@ import time
 from src.Helpers.retryable import retryable
 
 
+
+
 class OfficeCalendarEventFilter(Filter):
 
     @retryable(max_retries=5)
     def click(self) -> bool:
+        self._driver.refresh()
+
+        # Wait for full page load
+        WebDriverWait(self._driver, 30).until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
+        time.sleep(2)
         self._logger.info("Attempting to click filter button...")
         dropdown = self._locate()
         if not dropdown:
@@ -55,6 +64,26 @@ class OfficeCalendarEventFilter(Filter):
         return (By.XPATH, "//span[@class='display-value' and normalize-space(text())='Any Type']")
 
  
+class DefaultFilter(OfficeCalendarEventFilter):
+    def click(self) -> bool:
+        self._logger.info("Attempting to click filter button...")
+        dropdown = self._locate()
+        if not dropdown:
+            return False
+
+        try:
+            dropdown.click()
+            WebDriverWait(self._driver, self.DEFAULT_TIMEOUT).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "ngb-popover-window.popover.show")))   
+            self._logger.info("Successfully clicked filter button.")
+            time.sleep(5)
+            return True
+        except TimeoutException:
+            self._logger.error("Failed to wait for visibility of filter popup panel for options.")
+        except WebDriverException as e:
+            self._logger.error(f"Failed to click filter button due to error: {e}")
+        raise WebDriverException
+
+
 class OfficeCalendarUserFilter(OfficeCalendarEventFilter):
     @property
     def _locator(self):

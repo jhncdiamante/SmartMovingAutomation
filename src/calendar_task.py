@@ -1,6 +1,6 @@
 import os
 from src.Login.LoginCredentials import LoginCredentials                                                           
-from src.SeleniumDriver.Driver import ChromeDriver
+from src.Drivers.SeleniumDriver.Driver import ChromeDriver
 from src.CRM.SmartMoving.SmartMoving import SmartMoving
 from dotenv import load_dotenv
 from src.CRM.SmartMoving.Pages.Calendars import Calendars
